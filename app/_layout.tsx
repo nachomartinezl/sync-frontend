@@ -1,37 +1,47 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
+import React from 'react';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { ThemeProvider } from 'styled-components';
 import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
-import 'react-native-reanimated';
+import { StyleSheet } from 'react-native';
 
-import { useColorScheme } from '@/hooks/useColorScheme';
+import { theme } from '../theme'; 
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});
 
-export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-  });
+const screens = [
+  { name: 'index', title: 'Home' },
+  { name: 'login', title: 'Login' },
+  { name: 'register', title: 'Register' },
+  { name: 'personalData', title: 'Personal Data' },
+  { name: 'dashboard', title: 'Dashboard' },
+  { name: 'personalityTest', title: 'Personality Test' },
+  { name: 'astrologicalProfile', title: 'Astrological Profile' },
+  { name: 'interests', title: 'Interests' },
+  { name: 'profile', title: 'Profile' },
+  { name: 'matchDetails', title: 'Match' },
+  { name: 'availabilitySelection', title: 'Availability Selection' },
+  { name: 'dateSuggestion', title: 'Date Suggestion' },
+  { name: 'dateDetails', title: 'Date Details' },
+];
 
-  useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded]);
-
-  if (!loaded) {
-    return null;
-  }
-
+export default function App() {
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-    </ThemeProvider>
+    <GestureHandlerRootView style={styles.container}>
+      <ThemeProvider theme={theme}>
+        <Stack>
+          {screens.map((screen) => (
+            <Stack.Screen 
+              key={screen.name} 
+              name={screen.name} 
+              options={{ title: screen.title }} 
+            />
+          ))}
+        </Stack>
+      </ThemeProvider>
+    </GestureHandlerRootView>
   );
 }
