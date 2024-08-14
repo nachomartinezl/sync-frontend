@@ -24,7 +24,6 @@ const screens = [
   { name: 'profile', title: 'Profile' },
   { name: 'matchDetails', title: 'Match' },
   { name: 'availabilitySelection', title: 'Availability Selection' },
-  { name: 'dateSuggestion', title: 'Date Suggestion' },
   { name: 'dateDetails', title: 'Date Details' },
 ];
 

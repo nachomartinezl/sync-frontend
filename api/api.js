@@ -142,24 +142,6 @@ export const getDashboard = async () => {
   }
 };
 
-export const getMatch = async () => {
-  const token = await getValidToken();
-  console.log("Token:", token); // Log the token to ensure it's being generated correctly
-
-  try {
-    const response = await api.get("/match", {
-      headers: {
-        "x-auth-token": token,
-      },
-    });
-    console.log("Response:", response.data); // Log the response to see what you're getting
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching match:", error); // Log the error for debugging
-    throw error;
-  }
-};
-
 export const acceptMatchAndSendAvailability = async (matchId, availability) => {
   const token = await getValidToken();
 
@@ -178,6 +160,25 @@ export const acceptMatchAndSendAvailability = async (matchId, availability) => {
 
   return response.data;
 };
+
+export const rejectMatch = async (matchId) => {
+  const token = await getValidToken();
+
+  const response = await api.post(
+    "/date/reject",
+    {
+      matchId,
+    },
+    {
+      headers: {
+        "x-auth-token": token,
+      },
+    }
+  );
+
+  return response.data;
+};
+
 
 export const respondToSuggestedDate = async (matchId, response, options = {}) => {
   const token = await getValidToken();

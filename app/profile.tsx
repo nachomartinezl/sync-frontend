@@ -18,8 +18,8 @@ export default function ProfileSummaryScreen() {
     const fetchProfileData = async () => {
       try {
         const data = await getProfile();
-        console.log("Fetched Profile Data:", data);
-        setProfileData(data);  // Temporarily set the whole data to state
+        console.log("Fetched Profile Data Structure:", JSON.stringify(data, null, 2));
+        setProfileData(data.profileData);
       } catch (error) {
         console.error("Error fetching profile data:", error);
         setError("Failed to load profile data.");
@@ -27,7 +27,7 @@ export default function ProfileSummaryScreen() {
         setLoading(false);
       }
     };
-
+  
     fetchProfileData();
   }, []);
 

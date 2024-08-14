@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components/native";
 import { ScrollView, Text, Alert } from "react-native";
 import { useRouter, useLocalSearchParams } from "expo-router";
+import { rejectMatch } from "../api/api";
 import { Match } from "../types";
 import ProfileImage from "../components/ProfileImage";
 import ProfileDetailItem from "../components/ProfileDetailItem";
@@ -21,9 +22,21 @@ export default function MatchDetailsScreen() {
     );
   }
 
-  const handleIgnore = () => {
-    Alert.alert("Ignored", "You have ignored this match.");
-    router.push("/dashboard");
+  const handleIgnore = async () => {
+    try {
+      // Call the rejectMatch function to reject the match
+      await rejectMatch(match.id);
+
+      // Show confirmation alert to the user
+      Alert.alert("Ignored", "You have ignored this match.");
+
+      // Redirect the user to the dashboard
+      router.push("/dashboard");
+    } catch (error) {
+      // Handle any errors that occur during the API call
+      console.error("Error rejecting match:", error);
+      Alert.alert("Error", "There was a problem ignoring the match. Please try again.");
+    }
   };
 
   const handleAccept = () => {
