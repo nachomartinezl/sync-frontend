@@ -4,7 +4,7 @@ import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import { setItem, getItem } from "./storage";
 
-const API_URL = "http://192.168.1.14:3000/api"; // Replace with your backend URL
+const API_URL = "http://192.168.0.113:3000/api"; // Replace with your backend URL
 
 const api = axios.create({
   baseURL: API_URL,
@@ -125,6 +125,23 @@ export const getProfile = async () => {
   return response.data;
 };
 
+export const getDashboard = async () => {
+  const token = await getValidToken();
+
+  try {
+    const response = await api.get("/dashboard", {
+      headers: {
+        "x-auth-token": token,
+      },
+    });
+    console.log("Response:", response.data); 
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching match:", error);
+    throw error;
+  }
+};
+
 export const getMatch = async () => {
   const token = await getValidToken();
   console.log("Token:", token); // Log the token to ensure it's being generated correctly
@@ -162,40 +179,24 @@ export const acceptMatchAndSendAvailability = async (matchId, availability) => {
   return response.data;
 };
 
-export const getSuggestedDate = async (matchId) => {
+export const respondToSuggestedDate = async (matchId, response, options = {}) => {
   const token = await getValidToken();
-  const response = await api.get(`/date/suggested/${matchId}`, {
-    headers: {
-      "x-auth-token": token,
-    },
-  });
 
-  return response.data; // Ensure this returns an object with the `suggestedDate` key
-};
+  const payload = {
+    matchId,
+    response,
+    ...options, // Spread the options object to include suggestedDate and suggestedPlace if provided
+  };
 
-export const respondToSuggestedDate = async (matchId, response) => {
-  const token = await getValidToken();
   const res = await api.post(
     "/date/respond",
-    {
-      matchId,
-      response,
-    },
+    payload,
     {
       headers: {
         "x-auth-token": token,
       },
     }
   );
-  return res.data;
-};
 
-export const getAcceptedDate = async (matchId) => {
-  const token = await getValidToken();
-  const response = await api.get(`/date/accepted/${matchId}`, {
-    headers: {
-      "x-auth-token": token,
-    },
-  });
-  return response.data;
+  return res.data;
 };

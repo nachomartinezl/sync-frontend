@@ -10,7 +10,7 @@ interface ActionButtonsProps {
 const ActionButtons: React.FC<ActionButtonsProps> = ({ onIgnore, onAccept }) => (
   <ButtonContainer>
     <IgnoreButton onPress={onIgnore}>
-      <ButtonText>Ignore</ButtonText>
+      <ButtonText>Reject</ButtonText>
     </IgnoreButton>
     <AcceptButton onPress={onAccept}>
       <ButtonText>Accept</ButtonText>

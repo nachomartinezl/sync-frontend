@@ -1,7 +1,5 @@
-// components/MatchesSection.tsx
 import React from "react";
 import styled from "styled-components/native";
-import { TouchableOpacity } from "react-native";
 import { Match } from "../types";
 import NoDataText from "./NoDataText";
 
@@ -17,9 +15,15 @@ const MatchesSection: React.FC<MatchesSectionProps> = ({
   router,
 }) => (
   <Section>
-    <SectionTitle>Matches</SectionTitle>
     {match ? (
-      <MatchCard onPress={() => router.push("/matchDetails")}>
+      <MatchCard
+        onPress={() =>
+          router.push({
+            pathname: "/matchDetails",
+            params: { match: JSON.stringify(match) }, // Pass the match object as a JSON string
+          })
+        }
+      >
         <MatchImage source={{ uri: match.picture }} />
         <MatchInfo>
           <MatchText>Name: {match.name}</MatchText>
@@ -39,13 +43,6 @@ export default MatchesSection;
 
 const Section = styled.View`
   margin-bottom: 20px;
-`;
-
-const SectionTitle = styled.Text`
-  font-size: 18px;
-  font-weight: bold;
-  color: ${(props) => props.theme.colors.primary};
-  margin-bottom: 10px;
 `;
 
 const MatchCard = styled.TouchableOpacity`

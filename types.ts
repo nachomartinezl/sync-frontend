@@ -46,20 +46,15 @@ export interface SelectedSubcategories {
 }
 
 export interface Match {
+  id: string;
   name: string;
   age: number;
-  height: string;
-  picture: string;
-}
-
-export interface MatchDetails {
-  name: string;
-  age: number;
+  country: string;
   height: string;
   job: string;
   study: string;
-  personalDescription: string;
-  mainPicture: string;
+  bio: string;
+  picture: string; // You might want to use 'mainPicture' instead of 'picture'
   additionalPictures: string[];
 }
 
@@ -80,18 +75,6 @@ export interface SelectedDays {
 
 export interface SelectedTimes {
   [key: string]: boolean;
-}
-
-export type SuggestedDate = {
-  date: string;  // Or Date if you are working with Date objects
-  place: string;
-  otherUser: { name: string };
-};
-
-export interface UpcomingDate {
-  id: number;
-  place: string;
-  otherUser: { name: string };
 }
 
 export interface Interests {

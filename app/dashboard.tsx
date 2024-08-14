@@ -1,15 +1,13 @@
-// dashboard.tsx
 import React, { useEffect, useState } from "react";
 import styled from "styled-components/native";
 import { ActivityIndicator, Alert } from "react-native";
 import { useRouter } from "expo-router";
-import { Match, SuggestedDate } from "../types";
-import { getMatch, getSuggestedDate, getAcceptedDate } from "../api/api";
+import { Match } from "../types";
+import { getDashboard } from "../api/api";
 import TopBar from "../components/TopBar";
 import CompletenessBar from "../components/CompletenessBar";
 import MatchesSection from "../components/MatchesSection";
-import UpcomingDatesSection from "../components/UpcomingDatesSection";
-import SuggestedDatesSection from "../components/SuggestedDatesSection";
+import DatesSection from "../components/DatesSection";
 import TrainAlgorithmSection from "../components/TrainAlgorithmSection";
 
 export default function DashboardScreen() {
@@ -18,75 +16,60 @@ export default function DashboardScreen() {
   const [completeness, setCompleteness] = useState(0.5);
   const [match, setMatch] = useState<Match | null>(null);
   const [noMatch, setNoMatch] = useState(false);
-  const [suggestedDates, setSuggestedDates] = useState<SuggestedDate[]>([]);
-  const [acceptedDate, setAcceptedDate] = useState<{
+  const [appointment, setAppointment] = useState<{
+    name: string;
     date: string;
     place: string;
-    otherUser: { name: string };
+    status: string;
   } | null>(null);
   const [matchId, setMatchId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchMatch = async () => {
+    const fetchDashboardData = async () => {
       try {
         setLoading(true);
-        const data = await getMatch();
-        console.log("Match Data:", data);
+        const data = await getDashboard();
 
-        if (data && data.user2) {
+        if (data && data.match) {
           setMatchId(data.match._id);
 
-          if (data.match.accepted) {
-            setNoMatch(true);
-            setMatch(null);
+          setMatch({
+            id: data.match._id,
+            name: data.match.otherUser.name,
+            age: data.match.otherUser.age,
+            country: data.match.otherUser.country,
+            height: data.match.otherUser.height,
+            job: data.match.otherUser.job,
+            study: data.match.otherUser.study,
+            bio: data.match.otherUser.bio,
+            picture: data.match.otherUser.mainPicture || "https://via.placeholder.com/150",
+            additionalPictures: data.match.otherUser.additionalPictures || [],
+          });
 
-            const acceptedDateData = await getAcceptedDate(data.match._id);
-            console.log("Accepted Date Data:", acceptedDateData);
-
-            if (
-              acceptedDateData &&
-              acceptedDateData.acceptedDate &&
-              acceptedDateData.suggestedPlace
-            ) {
-              setAcceptedDate({
-                date: acceptedDateData.acceptedDate,
-                place: acceptedDateData.suggestedPlace,
-                otherUser: acceptedDateData.otherUser,
-              });
-            } else {
-              setAcceptedDate(null);
-            }
-          } else {
-            setMatch({
-              name: data.user2.profileData.name,
-              age: data.user2.profileData.age,
-              height: data.user2.profileData.height,
-              picture:
-                data.user2.profileData.profilePicture ||
-                "https://via.placeholder.com/100",
+          if (data.appointment) {
+            setAppointment({
+              name: data.match.otherUser.name,
+              date: data.appointment.date,
+              place: data.appointment.place,
+              status: data.appointment.status,
             });
-
-            const suggestedDateData = await getSuggestedDate(data.match._id);
-            if (suggestedDateData && suggestedDateData.suggestedDate) {
-              setSuggestedDates([suggestedDateData.suggestedDate]);
-            }
           }
         } else {
           setNoMatch(true);
         }
       } catch (error) {
-        console.error("Error fetching match:", error);
+        console.error("Error fetching dashboard data:", error);
         Alert.alert(
           "Error",
-          "There was a problem fetching your match. Please try again."
+          "There was a problem fetching your dashboard data. Please try again."
         );
       } finally {
         setLoading(false);
       }
     };
 
-    fetchMatch();
+    fetchDashboardData();
   }, []);
 
   if (loading) {
@@ -101,8 +84,9 @@ export default function DashboardScreen() {
     <Container>
       <TopBar name={name} onProfilePress={() => router.push("/profile")} />
       <CompletenessBar completeness={completeness} />
-      <UpcomingDatesSection acceptedDate={acceptedDate} router={router} />
-      <SuggestedDatesSection suggestedDates={suggestedDates} matchId={matchId} router={router} />
+      <SectionTitle>Dates</SectionTitle>
+      <DatesSection match={match} appointment={appointment} router={router} />
+      <SectionTitle>Matches</SectionTitle>
       <MatchesSection match={match} noMatch={noMatch} router={router} />
       <TrainAlgorithmSection router={router} />
     </Container>
@@ -113,4 +97,11 @@ const Container = styled.ScrollView`
   flex: 1;
   padding: 20px;
   background-color: ${(props) => props.theme.colors.background};
+`;
+
+const SectionTitle = styled.Text`
+  font-size: 18px;
+  font-weight: bold;
+  color: ${(props) => props.theme.colors.primary};
+  margin-bottom: 10px;
 `;
