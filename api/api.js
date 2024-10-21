@@ -4,7 +4,7 @@ import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import { setItem, getItem } from "./storage";
 
-const API_URL = "http://192.168.0.113:3000/api"; // Replace with your backend URL
+const API_URL = "http://192.168.0.16:3000/api"; // Replace with your backend URL
 
 const api = axios.create({
   baseURL: API_URL,
@@ -59,6 +59,27 @@ export const login = async (email, password) => {
     await setItem("refreshToken", response.data.refreshToken);
   }
   return response.data;
+};
+
+// Profile picture upload function
+export const uploadProfilePicture = async (file) => {
+  const token = await getValidToken();
+
+  const formData = new FormData();
+  formData.append("file", {
+    uri: file.uri,
+    name: file.name || "profile_picture.jpg",
+    type: file.type || "image/jpeg", // Adjust as needed
+  });
+
+  const response = await api.post("/profile/upload-profile-picture", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+      "x-auth-token": token,
+    },
+  });
+
+  return response.data; // Returns the file URL or other response
 };
 
 // Application routes

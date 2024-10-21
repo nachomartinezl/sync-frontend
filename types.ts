@@ -12,11 +12,8 @@ export interface PersonalData {
   preference: string;
   country: string;
   height: string;
-  job: string;
-  study: string;
   bio: string;
   profilePicture: string;
-  morePictures: string[];
 }
 
 export interface PersonalityTestResponse {
@@ -45,6 +42,12 @@ export interface SelectedSubcategories {
   };
 }
 
+export interface Appointment {
+  date: string; // ISO string format for the date
+  place: string;
+  status: string;
+}
+
 export interface Match {
   id: string;
   name: string;
@@ -56,6 +59,7 @@ export interface Match {
   bio: string;
   picture: string; // You might want to use 'mainPicture' instead of 'picture'
   additionalPictures: string[];
+  appointment?: Appointment;
 }
 
 export type Day =

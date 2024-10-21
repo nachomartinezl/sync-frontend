@@ -1,208 +1,194 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import styled from "styled-components/native";
-import { ScrollView, Text, View } from "react-native";
-import { ProfileData } from "../types";
-import { getProfile } from "../api/api";
-import ProfileImage from "../components/ProfileImage";
-import ProfileDetailItem from "../components/ProfileDetailItem";
-import InterestList from "../components/InterestList";
-import GraphItem from "../components/GraphItem";
-import AstrologicalItem from "../components/AstrologicalItem";
+import { ScrollView, View, TouchableOpacity, Image } from "react-native";
+import { useRouter } from "expo-router";
 
 export default function ProfileSummaryScreen() {
-  const [profileData, setProfileData] = useState<ProfileData | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
+  const [profileData] = useState({
+    name: "Devan",
+    bio: "Born in Sydney, currently traveling the world in pursuit of new experiences and adventures. Passionate about fitness and living an active lifestyle, constantly exploring new ways to challenge both mind and body.",
+    preference: "Women",
+    mainPicture:
+      "https://cdn.usegalileo.ai/stability/7fa5b77f-a521-4605-b8fe-86ed75b44f5a.png",
+  });
 
-  useEffect(() => {
-    const fetchProfileData = async () => {
-      try {
-        const data = await getProfile();
-        console.log("Fetched Profile Data Structure:", JSON.stringify(data, null, 2));
-        setProfileData(data.profileData);
-      } catch (error) {
-        console.error("Error fetching profile data:", error);
-        setError("Failed to load profile data.");
-      } finally {
-        setLoading(false);
-      }
-    };
-  
-    fetchProfileData();
-  }, []);
-
-  if (loading) {
-    return <Text>Loading...</Text>;
-  }
-
-  if (error) {
-    return <Text>{error}</Text>;
-  }
-
-  if (!profileData) {
-    return <Text>No profile data available.</Text>;
-  }
-
-  const {
-    name = "N/A",
-    surname = "N/A",
-    bio = "No bio available",
-    country = "Unknown",
-    dob = "Unknown",
-    gender = "Unknown",
-    height = "Unknown",
-    job = "Unknown",
-    study = "Unknown",
-    mainPicture,
-    additionalPictures = [],
-    interests = {},
-    personalityProfile = {
-      openness: 0,
-      conscientiousness: 0,
-      extraversion: 0,
-      agreeableness: 0,
-      neuroticism: 0,
-    },
-    astrologicalProfile = {
-      sunSign: "Unknown",
-      moonSign: "Unknown",
-      ascendant: "Unknown",
-      venusPosition: "Unknown",
-      marsPosition: "Unknown",
-      birthTime: "Unknown",
-      latitude: 0,
-      longitude: 0,
-    },
-  } = profileData || {};
+  const { name, bio, mainPicture, preference } = profileData;
 
   return (
     <Container>
-      <ScrollView>
-        <ProfileCard>
-          <ProfileImage
-            uri={mainPicture || "https://via.placeholder.com/150"}
-            size={150}
-          />
-          <ProfileDetails>
-            <ProfileDetailItem label="Name" value={`${name} ${surname}`} />
-            <ProfileDetailItem label="Height" value={height} />
-            <ProfileDetailItem label="Job" value={job} />
-            <ProfileDetailItem label="Study" value={study} />
-            <ProfileDetailItem label="Bio" value={bio} />
-            <ProfileDetailItem label="Country" value={country} />
-            <ProfileDetailItem label="Gender" value={gender} />
-            <ProfileDetailItem label="Date of Birth" value={dob} />
-          </ProfileDetails>
-          <AdditionalPictures>
-            {additionalPictures.map((picture, index) => (
-              <ProfileImage
-                key={index}
-                uri={picture || "https://via.placeholder.com/100"}
-                size={100}
+      <BackButton onPress={() => router.back()}>
+        <BackArrow>←</BackArrow>
+      </BackButton>
+      {/* User Name on Top */}
+      <UserName>{name}</UserName>
+
+      {/* Profile Picture with Update Text */}
+      <ProfilePictureContainer>
+        <ProfileImage source={{ uri: mainPicture }} />
+        <TouchableOpacity>
+          <UpdateText>Update Photo</UpdateText>
+        </TouchableOpacity>
+      </ProfilePictureContainer>
+
+      {/* Bio */}
+      <BioCard>
+        <BioText>{bio}</BioText>
+      </BioCard>
+
+      {/* Preference Section */}
+      <Section>
+        <SectionTitle>Your preference</SectionTitle>
+        <TouchableOpacity>
+        <PreferenceContainer>
+          <PreferenceText>{preference}</PreferenceText>
+          <PreferenceIcon source={require("../assets/icons/women.png")} />
+        </PreferenceContainer>
+        </TouchableOpacity>
+      </Section>
+
+      {/* Settings Section */}
+      <Section>
+        <SectionTitle>Settings</SectionTitle>
+        <SettingsContainer>
+          <TouchableOpacity>
+            <SettingsItem>
+              <SettingsText>Change password</SettingsText>
+              <SettingsIconRight
+                source={require("../assets/icons/password.png")}
               />
-            ))}
-          </AdditionalPictures>
-          <SectionTitle>Interests</SectionTitle>
-          <InterestList interests={interests} />
-          <SectionTitle>Personality Profile</SectionTitle>
-          <PersonalityGraph>
-            <GraphItem label="Openness" value={personalityProfile.openness || 0} />
-            <GraphItem
-              label="Conscientiousness"
-              value={personalityProfile.conscientiousness || 0}
-            />
-            <GraphItem
-              label="Extraversion"
-              value={personalityProfile.extraversion || 0}
-            />
-            <GraphItem
-              label="Agreeableness"
-              value={personalityProfile.agreeableness || 0}
-            />
-            <GraphItem
-              label="Neuroticism"
-              value={personalityProfile.neuroticism || 0}
-            />
-          </PersonalityGraph>
-          <SectionTitle>Astrological Profile</SectionTitle>
-          <AstrologicalDetails>
-            <AstrologicalItem
-              label="Sun Sign"
-              value={astrologicalProfile.sunSign || "Unknown"}
-            />
-            <AstrologicalItem
-              label="Moon Sign"
-              value={astrologicalProfile.moonSign || "Unknown"}
-            />
-            <AstrologicalItem
-              label="Ascendant"
-              value={astrologicalProfile.ascendant || "Unknown"}
-            />
-            <AstrologicalItem
-              label="Venus Position"
-              value={astrologicalProfile.venusPosition || "Unknown"}
-            />
-            <AstrologicalItem
-              label="Mars Position"
-              value={astrologicalProfile.marsPosition || "Unknown"}
-            />
-            <AstrologicalItem
-              label="Birth Time"
-              value={astrologicalProfile.birthTime || "Unknown"}
-            />
-            <AstrologicalItem
-              label="Latitude"
-              value={astrologicalProfile.latitude?.toString() || "Unknown"}
-            />
-            <AstrologicalItem
-              label="Longitude"
-              value={astrologicalProfile.longitude?.toString() || "Unknown"}
-            />
-          </AstrologicalDetails>
-        </ProfileCard>
-      </ScrollView>
+            </SettingsItem>
+          </TouchableOpacity>
+          <TouchableOpacity>
+            <SettingsItem>
+              <SettingsText>Phone number</SettingsText>
+              <SettingsIconRight
+                source={require("../assets/icons/phone.png")}
+              />
+            </SettingsItem>
+          </TouchableOpacity>
+        </SettingsContainer>
+      </Section>
     </Container>
   );
 }
 
+// Styled components
+
 const Container = styled.View`
   flex: 1;
-  padding: 20px;
-  background-color: ${(props) => props.theme.colors.background};
+  justify-content: flex-start;
+  align-items: center;
+  background-color: #121212;
+  padding: 10px;
+  padding-top: 15%;
 `;
 
-const ProfileCard = styled.View`
-  background-color: ${(props) => props.theme.colors.cardBackground};
-  border-radius: 10px;
-  padding: 20px;
+const BackButton = styled.TouchableOpacity`
+  position: absolute;
+  top: 20px;
+  left: 20px;
+`;
+
+const BackArrow = styled.Text`
+  font-size: 24px;
+  color: ${(props) => props.theme.colors.primary};
+`;
+
+const UserName = styled.Text`
+  font-size: 24px;
+  color: white;
+  font-weight: bold;
+  margin-bottom: 20px;
+`;
+
+const ProfilePictureContainer = styled.View`
+  justify-content: center;
   align-items: center;
   margin-bottom: 20px;
 `;
 
-const ProfileDetails = styled.View`
-  align-items: center;
-  margin-bottom: 20px;
+const ProfileImage = styled.Image`
+  width: 150px;
+  height: 150px;
+  border-radius: 12px;
+  background-color: #333;
+  margin-bottom: 10px;
 `;
 
-const AdditionalPictures = styled.View`
-  flex-direction: row;
+const UpdateText = styled.Text`
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  margin-top: 10px;
+`;
+
+const BioCard = styled.View`
+  background-color: #1e1e1e;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+  width: 90%;
+  elevation: 5;
+`;
+
+const BioText = styled.Text`
+  color: white;
+  font-size: 16px;
+  text-align: left;
+`;
+
+const Section = styled.View`
+  width: 90%;
   margin-bottom: 20px;
 `;
 
 const SectionTitle = styled.Text`
-  font-size: 20px;
+  color: white;
+  font-size: 18px;
   font-weight: bold;
-  color: ${(props) => props.theme.colors.primary};
-  margin: 20px 0 10px;
-  align-self: flex-start;
+  margin-bottom: 10px;
 `;
 
-const PersonalityGraph = styled.View`
-  width: 100%;
-  margin-bottom: 20px;
-`;
-
-const AstrologicalDetails = styled.View`
+const PreferenceContainer = styled.View`
+  flex-direction: row;
   align-items: center;
-  margin-bottom: 20px;
+  justify-content: space-between;
+  padding: 15px;
+  background-color: #1e1e1e;
+  border-radius: 12px;
+`;
+
+const PreferenceText = styled.Text`
+  color: white;
+  font-size: 16px;
+`;
+
+const PreferenceIcon = styled.Image`
+  width: 13px;
+  height: 24px;
+`;
+
+const SettingsContainer = styled.View`
+  width: 100%;
+`;
+
+const SettingsItem = styled.View`
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px;
+  background-color: #1e1e1e;
+  border-radius: 12px;
+  margin-bottom: 15px;
+`;
+
+const SettingsText = styled.Text`
+  color: white;
+  font-size: 16px;
+`;
+
+const SettingsIconRight = styled.Image`
+  width: 22px;
+  height: 22px;
 `;

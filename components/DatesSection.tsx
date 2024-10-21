@@ -4,52 +4,56 @@ import { Match } from "../types";
 import NoDataText from "./NoDataText";
 
 interface DatesSectionProps {
-  match: Match | null;
-  appointment: { name: string; date: string; place: string; status: string } | null;
+  matches: Match[];  // Expecting an array of matches
   router: any;
 }
 
-const DatesSection: React.FC<DatesSectionProps> = ({ match, appointment, router }) => (
-  <Section>
-    {appointment ? (
-     <DateCard
-     onPress={() =>
-       router.push({
-         pathname: "/dateDetails",
-         params: {
-           match: JSON.stringify(match), // Passing match object as a JSON string
-           date: JSON.stringify({
-             place: appointment.place,
-             datetime: appointment.date,
-           }),
-         },
-       })
-     }
-   >
-        <CardDetails>
-        <NameText>Name: {appointment.name}</NameText> 
-          <PlaceText>Place: {appointment.place}</PlaceText>
-          <DateText>Date: {appointment.date}</DateText>
-          <StatusText>Status: {appointment.status}</StatusText>
-        </CardDetails>
-      </DateCard>
-    ) : (
-      <NoDataText>No dates set yet</NoDataText>
-    )}
-  </Section>
-);
+const DatesSection: React.FC<DatesSectionProps> = ({ matches = [], router }) => {
+  // Ensure matches is always an array, even if undefined
+  const relevantMatches = matches.filter(
+    match =>
+      match.appointment &&
+      (match.appointment.status === 'pending' || match.appointment.status === 'accepted')
+  );
+
+  if (relevantMatches.length === 0) {
+    return <NoDataText>No dates available.</NoDataText>;
+  }
+
+  return (
+    <Section>
+      {relevantMatches.map(match => (
+        <DateCard
+          key={match.id}
+          onPress={() =>
+            router.push({
+              pathname: "/dateDetails",
+              params: {
+                match: JSON.stringify(match),
+                date: JSON.stringify({
+                  place: match.appointment?.place,
+                  datetime: match.appointment?.date,
+                }),
+              },
+            })
+          }
+        >
+          <CardDetails>
+            <NameText>{match.name}</NameText>
+            <PlaceText>Place: {match.appointment?.place}</PlaceText>
+            <DateText>Date: {match.appointment?.date ? new Date(match.appointment.date).toLocaleString() : 'No date provided'}</DateText>
+            <StatusText>Status: {match.appointment?.status}</StatusText>
+          </CardDetails>
+        </DateCard>
+      ))}
+    </Section>
+  );
+};
 
 export default DatesSection;
 
 const Section = styled.View`
   margin-bottom: 20px;
-`;
-
-const SectionTitle = styled.Text`
-  font-size: 18px;
-  font-weight: bold;
-  color: ${(props) => props.theme.colors.primary};
-  margin-bottom: 10px;
 `;
 
 const DateCard = styled.TouchableOpacity`

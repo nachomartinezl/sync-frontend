@@ -1,126 +1,244 @@
 import React, { useState } from "react";
 import styled from "styled-components/native";
-import { ScrollView, Alert, TouchableOpacity } from "react-native";
-import { useRouter, useLocalSearchParams } from "expo-router";
-import { respondToSuggestedDate } from "../api/api";
-import { Match } from "../types";
-import MatchesSection from "../components/MatchesSection"; // Reuse MatchCard component
-import NoDataText from "../components/NoDataText";
-import ActionButtons from "../components/ActionButtons";
-import DatePicker from "react-native-date-picker";
-
-interface DateDetailsParams {
-  match: string; // JSON stringified Match object
-  date: string;  // JSON stringified Date object
-}
-
-interface DateDetails {
-  place: string;
-  datetime: string; // Can be Date type if necessary
-}
+import { ScrollView, TouchableOpacity, Text } from "react-native";
+import { useRouter } from "expo-router";
+import WhiteButton from "../components/WhiteButton";
+import TransparentButton from "../components/TransparentButton";
 
 export default function DateDetailsScreen() {
   const router = useRouter();
-  const { match: matchParam, date: dateParam } = useLocalSearchParams();
 
-  const match: Match | null = matchParam ? JSON.parse(matchParam as string) : null;
-  const date: DateDetails | null = dateParam ? JSON.parse(dateParam as string) : null;
+  // Mock date data
+  const [dateDetails] = useState({
+    id: "2",
+    name: "Gina",
+    age: 24,
+    height: 1.77,
+    zodiac: "Cancer",
+    country: "CA",
+    picture: "https://cdn.usegalileo.ai/stability/592d5f3f-d636-48a4-9277-8cce7690ba8c.png",
+    place: "Rooftop Bar",
+    dateTime: "Next Friday, 22 hs",
+    status: "Confirmed",
+    tags: ["Photography", "Running", "Nutrition", "Swimming", "Jazz", "Travel", "Reading"],
+  });
 
-  const [isDatePickerVisible, setDatePickerVisible] = useState(false);
-  const [selectedDate, setSelectedDate] = useState(new Date());
-
-  if (!match || !date) {
-    return (
-      <Container>
-        <NoDataText>No date or match details available.</NoDataText>
-      </Container>
-    );
-  }
-
-  const handleAccept = async () => {
-    try {
-      const result = await respondToSuggestedDate(match.id, "accept");
-      Alert.alert("Success", result.msg);
-      router.push("/dashboard");
-    } catch (error) {
-      console.error("Error accepting the date:", error);
-      Alert.alert("Error", "Failed to accept the date. Please try again.");
-    }
+  // Placeholder function for rescheduling the date
+  const handleReschedule = () => {
+    console.log("Reschedule button pressed");
+    // Placeholder logic for rescheduling
   };
 
-  const handleReject = () => {
-    setDatePickerVisible(true);
-  };
-
-  const handleDateChange = async (selectedDate: Date) => {
-    setSelectedDate(selectedDate);
-    setDatePickerVisible(false);
-  
-    try {
-      const result = await respondToSuggestedDate(match.id, "reject", {
-        suggestedDate: selectedDate.toISOString(),
-        suggestedPlace: date.place, // Access 'place' from the 'date' object
-      });
-      Alert.alert("Success", result.msg);
-      router.push("/dashboard");
-    } catch (error) {
-      console.error("Error rejecting the date:", error);
-      Alert.alert("Error", "Failed to reject the date. Please try again.");
-    }
+  // Placeholder function for suggesting a new place
+  const handleSuggestion = () => {
+    console.log("Suggest new place button pressed");
+    // Placeholder logic for suggesting a new place
   };
 
   return (
     <Container>
-      <ScrollView>
-        <SectionTitle>Your Date</SectionTitle>
-        <MatchCardContainer>
-          <MatchesSection noMatch={false} router={router} match={match} />
-        </MatchCardContainer>
-        <DateDetailsCard>
-          <DetailText>Place: {date.place}</DetailText>
-          <DetailText>Date & Time: {new Date(date.datetime).toLocaleString()}</DetailText>
-        </DateDetailsCard>
-        <ActionButtons onIgnore={handleReject} onAccept={handleAccept} />
-      </ScrollView>
+      {/* Back Button */}
+      <BackButton onPress={() => router.back()}>
+        <BackArrow>←</BackArrow>
+      </BackButton>
 
-      <DatePicker
-        modal
-        open={isDatePickerVisible}
-        date={selectedDate}
-        mode="datetime"
-        onConfirm={handleDateChange}
-        onCancel={() => setDatePickerVisible(false)}
-      />
+      {/* Name */}
+      <UserName>Date with {dateDetails.name}</UserName>
+
+      {/* Picture and Date Details Card */}
+      <DateDetailsCard>
+        <ProfileImage source={{ uri: dateDetails.picture }} />
+        <DateInfo>
+          <Place>{dateDetails.place}</Place>
+          <DateTime>{dateDetails.dateTime}</DateTime>
+          <StatusContainer>
+            <Status>{dateDetails.status}</Status>
+          </StatusContainer>
+        </DateInfo>
+      </DateDetailsCard>
+
+      {/* Info Row */}
+      <InfoRow>
+        <InfoItem>
+          <InfoIcon source={require("../assets/icons/age.png")} />
+          <InfoText>{dateDetails.age}</InfoText>
+        </InfoItem>
+        <InfoItem>
+          <InfoIcon source={require("../assets/icons/height.png")} />
+          <InfoText>{dateDetails.height}m</InfoText>
+        </InfoItem>
+        <InfoItem>
+          <InfoIcon source={require("../assets/icons/cancer.png")} />
+          <InfoText>{dateDetails.zodiac}</InfoText>
+        </InfoItem>
+        <InfoItem>
+          <InfoIcon source={require("../assets/icons/country.png")} />
+          <InfoText>{dateDetails.country}</InfoText>
+        </InfoItem>
+      </InfoRow>
+
+      {/* Tags Section */}
+      <TagsContainer>
+        {dateDetails.tags.map((tag, index) => (
+          <Tag key={index}>
+            <TagText>{tag}</TagText>
+          </Tag>
+        ))}
+      </TagsContainer>
+
+      {/* Buttons */}
+      <ButtonSection>
+        <TransparentButton onPress={handleReschedule} title="Reschedule">
+          <ButtonText>Reschedule</ButtonText>
+        </TransparentButton>
+        <WhiteButton onPress={handleSuggestion} title="Suggest new place">
+          <ButtonText>Suggest new place</ButtonText>
+        </WhiteButton>
+      </ButtonSection>
     </Container>
   );
 }
 
+// Styled components
+
 const Container = styled.View`
   flex: 1;
-  padding: 20px;
-  background-color: ${(props) => props.theme.colors.background};
+  justify-content: flex-start;
+  align-items: center;
+  background-color: #121212;
+  padding: 10px;
+  padding-top: 15%;
 `;
 
-const MatchCardContainer = styled.View`
+const BackButton = styled.TouchableOpacity`
+  position: absolute;
+  top: 20px;
+  left: 20px;
+`;
+
+const BackArrow = styled.Text`
+  font-size: 24px;
+  color: white;
+`;
+
+const UserName = styled.Text`
+  font-size: 24px;
+  color: white;
+  font-weight: bold;
   margin-bottom: 20px;
 `;
 
 const DateDetailsCard = styled.View`
-  padding: 20px;
-  background-color: ${(props) => props.theme.colors.cardBackground};
-  border-radius: 10px;
+  background-color: #1c1c1e;
+  border-radius: 12px;
+  align-items: center;
   margin-bottom: 20px;
+  width: 51%;
 `;
 
-const DetailText = styled.Text`
-  font-size: 16px;
-  color: ${(props) => props.theme.colors.text};
+const ProfileImage = styled.Image`
+  width: 187px;
+  height: 187px;
+  border-radius: 12px;
+  background-color: #333;
   margin-bottom: 10px;
 `;
 
-const SectionTitle = styled.Text`
+const DateInfo = styled.View`
+  align-items: center;
+`;
+
+const Place = styled.Text`
+  color: white;
   font-size: 18px;
   font-weight: bold;
-  color: ${(props) => props.theme.colors.primary};
+  margin-bottom: 5px;
+`;
+
+const DateTime = styled.Text`
+  color: white;
+  font-size: 16px;
   margin-bottom: 10px;
+`;
+
+const StatusContainer = styled.View`
+  background-color: #008043;
+  padding: 5px 10px;
+  border-radius: 6px;
+  margin-bottom: 10%;
+`;
+
+const Status = styled.Text`
+  color: white;
+  font-size: 14px;
+`;
+
+const InfoRow = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 2%;
+  margin-bottom: 1%;
+  padding: 0 10px;
+`;
+
+const InfoItem = styled.TouchableOpacity`
+  align-items: center;
+  justify-content: center;
+  width: 23%; 
+  background-color: #1c1c1e;
+  border-radius: 10px;
+  padding: 2px; 
+  shadow-color: #000;
+  shadow-offset: 0px 2px;
+  shadow-opacity: 0.8;
+  shadow-radius: 2px;
+  elevation: 4;
+`;
+
+const InfoIcon = styled.Image`
+  margin-bottom: 5px;
+  max-height: 33px;
+`;
+
+const InfoText = styled.Text`
+  font-size: 14px;
+  color: #fff;
+  text-align: center;
+`;
+
+const TagsContainer = styled.View`
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 10px;
+`;
+
+const Tag = styled.View`
+  background-color: #1c1c1e;
+  padding: 5px 15px;
+  border-radius: 8px;
+  margin: 5px;
+  shadow-color: #000;
+  shadow-offset: 0px 2px;
+  shadow-opacity: 0.8;
+  shadow-radius: 2px;
+  elevation: 4;
+`;
+
+const TagText = styled.Text`
+  color: white;
+  font-size: 14px;
+`;
+
+const ButtonSection = styled.View`
+  width: 100%;
+  align-items: center;
+  margin-top: 30px;
+`;
+
+const ButtonText = styled.Text`
+  color: black;
+  font-size: 16px;
+  font-weight: bold;
 `;

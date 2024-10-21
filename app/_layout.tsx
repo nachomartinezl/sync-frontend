@@ -3,7 +3,6 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { ThemeProvider } from 'styled-components';
 import { Stack } from 'expo-router';
 import { StyleSheet } from 'react-native';
-
 import { theme } from '../theme'; 
 
 const styles = StyleSheet.create({
@@ -17,6 +16,8 @@ const screens = [
   { name: 'login', title: 'Login' },
   { name: 'register', title: 'Register' },
   { name: 'personalData', title: 'Personal Data' },
+  { name: 'aboutYou', title: 'About You' },
+  { name: 'yourProfile', title: 'Your Profile' },
   { name: 'dashboard', title: 'Dashboard' },
   { name: 'personalityTest', title: 'Personality Test' },
   { name: 'astrologicalProfile', title: 'Astrological Profile' },
@@ -36,7 +37,7 @@ export default function App() {
             <Stack.Screen 
               key={screen.name} 
               name={screen.name} 
-              options={{ title: screen.title }} 
+              options={{ title: screen.title, headerShown: false }} 
             />
           ))}
         </Stack>

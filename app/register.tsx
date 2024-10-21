@@ -4,7 +4,7 @@ import { useRouter } from "expo-router";
 import { UserCredentials, APIErrorResponse, ValidationError } from "../types";
 import { register } from "../api/api";
 import axios from "axios";
-import StyledButton from "../components/StyledButton";
+import WhiteButton from "../components/WhiteButton";
 
 export default function RegisterScreen() {
   const router = useRouter();
@@ -17,7 +17,7 @@ export default function RegisterScreen() {
   const handleRegister = async () => {
     try {
       const data = await register(credentials.email, credentials.password);
-      router.push("/personalData");
+      router.push("/personalData"); // Navigate to next step
     } catch (err) {
       if (axios.isAxiosError(err)) {
         const errorResponse = (err.response?.data as APIErrorResponse) || {
@@ -41,34 +41,50 @@ export default function RegisterScreen() {
 
   return (
     <Container>
-      <Title>Register</Title>
+      <BackButton onPress={() => router.back()}>
+        <BackArrow>←</BackArrow>
+      </BackButton>
+      <Title>Create your account</Title>
       {error && <ErrorText>{error}</ErrorText>}
+      
       <Input
         placeholder="Email"
         value={credentials.email}
         onChangeText={(email) => setCredentials({ ...credentials, email })}
         placeholderTextColor="#888"
       />
+      
       <Input
         placeholder="Password"
         secureTextEntry
         value={credentials.password}
-        onChangeText={(password) =>
-          setCredentials({ ...credentials, password })
-        }
+        onChangeText={(password) => setCredentials({ ...credentials, password })}
         placeholderTextColor="#888"
       />
-      <StyledButton onPress={handleRegister} title="Register" />
-      <StyledButton onPress={() => router.push("/")} title="Back to Home" />
+      
+      <WhiteButton onPress={handleRegister} title="Next" />
     </Container>
   );
 }
 
 const Container = styled.View`
   flex: 1;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   background-color: ${(props) => props.theme.colors.background};
+  padding: 20px;
+  padding-top: 100px;
+`;
+
+const BackButton = styled.TouchableOpacity`
+  position: absolute;
+  top: 20px;
+  left: 20px;
+`;
+
+const BackArrow = styled.Text`
+  font-size: 24px;
+  color: ${(props) => props.theme.colors.primary};
 `;
 
 const Title = styled.Text`
@@ -79,13 +95,14 @@ const Title = styled.Text`
 `;
 
 const Input = styled.TextInput`
-  width: 80%;
-  height: 40px;
-  border: 1px solid ${(props) => props.theme.colors.border};
-  margin-bottom: 12px;
+  width: 90%;
+  height: 50px;
+  background-color: ${(props) => props.theme.colors.secondary};
+  border-radius: 12px;
+  margin-bottom: 20px;
   padding: 10px;
-  color: ${(props) => props.theme.colors.text};
-  background-color: ${(props) => props.theme.colors.inputBackground};
+  color: ${(props) => props.theme.colors.primary};
+  elevation: 5;
 `;
 
 const ErrorText = styled.Text`

@@ -2,12 +2,12 @@ import React from 'react';
 import styled from 'styled-components/native';
 import { TouchableOpacityProps } from 'react-native';
 
-interface StyledButtonProps extends TouchableOpacityProps {
+interface WhiteButtonProps extends TouchableOpacityProps {
   onPress: () => void;
   title: string;
 }
 
-const StyledButton: React.FC<StyledButtonProps> = ({ onPress, title }) => {
+const WhiteButton: React.FC<WhiteButtonProps> = ({ onPress, title }) => {
   return (
     <Button onPress={onPress}>
       <ButtonText>{title}</ButtonText>
@@ -17,15 +17,20 @@ const StyledButton: React.FC<StyledButtonProps> = ({ onPress, title }) => {
 
 const Button = styled.TouchableOpacity`
   background-color: ${(props) => props.theme.colors.primary};
-  padding: 10px 20px;
-  border-radius: 7px;
+  padding: 12px;
+  border-radius: 12px;
+  border-color: ${(props) => props.theme.colors.primary};
   margin-top: 10px;
+  width: 90%;
+  justify-content: center;
+  align-items: center;
 `;
 
 const ButtonText = styled.Text`
-  color: ${(props) => props.theme.colors.background};
-  font-size: ${(props) => props.theme.fontSizes.medium};
+  color: black;
+  font-size: ${(props) => props.theme.fontSizes.small};
+  font-weight: bold;
   text-align: center;
 `;
 
-export default React.memo(StyledButton);
+export default React.memo(WhiteButton);

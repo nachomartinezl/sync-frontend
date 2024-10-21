@@ -1,14 +1,15 @@
 // theme.js
 export const theme = {
     colors: {
-      background: '#1c1c1c',
+      background: '#121417',
       primary: '#ffffff',
-      secondary: '#e0e0e0',
+      secondary: '#1c1c1e',
+      text: ''
     },
     fontSizes: {
-      large: '24px',
-      medium: '18px',
-      small: '14px',
+      large: '22px',
+      medium: '20px',
+      small: '16px',
     },
   };
   
