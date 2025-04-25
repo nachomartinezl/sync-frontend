@@ -4,7 +4,7 @@ import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import { setItem, getItem } from "./storage";
 
-const API_URL = "http://192.168.0.16:3000/api"; // Replace with your backend URL
+const API_URL = "http://10.0.2.2:3000/api"; // Replace with your backend URL
 
 const api = axios.create({
   baseURL: API_URL,

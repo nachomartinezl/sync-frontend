@@ -45,8 +45,11 @@ const MATCHES = [
 // Icons for algorithm training (replace with dynamic assets or API paths if needed)
 const ALGORITHM_ICONS = {
   personality: require("../assets/icons/personality.png"),
+  emotional: require("../assets/icons/emotional.png"),
+  character: require("../assets/icons/character.png"),
   astrological: require("../assets/icons/cancer.png"),
   interests: require("../assets/icons/interests.png"),
+  values: require("../assets/icons/values.png"),
 };
 
 export default function DashboardScreen() {
@@ -108,13 +111,25 @@ export default function DashboardScreen() {
               <AlgorithmIcon source={ALGORITHM_ICONS.personality} />
               <AlgorithmText>Personality</AlgorithmText>
             </AlgorithmButton>
+            <AlgorithmButton onPress={() => router.push("/personalityTest")}>
+              <AlgorithmIcon source={ALGORITHM_ICONS.character} />
+              <AlgorithmText>Character</AlgorithmText>
+            </AlgorithmButton>
+            <AlgorithmButton onPress={() => router.push("/personalityTest")}>
+              <AlgorithmIcon source={ALGORITHM_ICONS.emotional} />
+              <AlgorithmText>Emotional</AlgorithmText>
+            </AlgorithmButton>
             <AlgorithmButton onPress={() => router.push("/astrologicalProfile")}>
               <AlgorithmIcon source={ALGORITHM_ICONS.astrological} />
-              <AlgorithmText>Astrological</AlgorithmText>
+              <AlgorithmText>Astrology</AlgorithmText>
             </AlgorithmButton>
             <AlgorithmButton onPress={() => router.push("/interests")}>
               <AlgorithmIcon source={ALGORITHM_ICONS.interests} />
               <AlgorithmText>Interests</AlgorithmText>
+            </AlgorithmButton>
+            <AlgorithmButton onPress={() => router.push("/interests")}>
+              <AlgorithmIcon source={ALGORITHM_ICONS.values} />
+              <AlgorithmText>Values</AlgorithmText>
             </AlgorithmButton>
           </AlgorithmSection>
         </Section>
@@ -142,13 +157,15 @@ const ProfileSection = styled.View`
 `;
 
 const GreetingText = styled.Text`
-  font-size: 20px;
+  font-size: ${(props) => props.theme.fontSizes.large};
   color: ${(props) => props.theme.colors.primary};
+  font-family: ${(props) => props.theme.fonts.bold};
 `;
 
 const CompletionText = styled.Text`
   font-size: 14px;
   color: #9eabb8;
+  font-family: ${(props) => props.theme.fonts.regular};
 `;
 
 const ProfileImage = styled.Image`
@@ -169,8 +186,8 @@ const Section = styled.View<SectionProps>`
 
 const SectionTitle = styled.Text`
   font-size: 18px;
-  font-weight: bold;
   color: ${(props) => props.theme.colors.primary};
+  font-family: ${(props) => props.theme.fonts.bold};
   margin-bottom: 3%;
 `;
 
@@ -209,8 +226,8 @@ const Status = styled.Text`
 
 const NameText = styled.Text`
   font-size: 16px;
-  font-weight: bold;
   color: ${(props) => props.theme.colors.primary};
+  font-family: ${(props) => props.theme.fonts.regular};
   margin-bottom: 5px;
 `;
 
@@ -218,19 +235,16 @@ const PlaceText = styled.Text`
   font-size: 16px;
   margin-bottom: 5px;
   color: ${(props) => props.theme.colors.primary};
+  font-family: ${(props) => props.theme.fonts.regular};
 `;
 
 const DateText = styled.Text`
   font-size: 16px;
   margin-bottom: 5px;
   color: ${(props) => props.theme.colors.primary};
+  font-family: ${(props) => props.theme.fonts.regular};
 `;
 
-const StatusButton = styled.Text`
-  font-size: 14px;
-  font-weight: bold;
-  color: green;
-`;
 
 const MatchesGrid = styled.View`
   flex-direction: row;
@@ -253,23 +267,27 @@ const MatchImage = styled.Image`
 
 const MatchName = styled.Text`
   font-size: 14px;
-  font-weight: bold;
   color: ${(props) => props.theme.colors.primary};
+  font-family: ${(props) => props.theme.fonts.bold};
 `;
 
 const AlgorithmSection = styled.View`
+  flex: 1;
+  flex-wrap: wrap;
   flex-direction: row;
   justify-content: space-between;
   margin-top: 10px;
 `;
 
 const AlgorithmButton = styled.TouchableOpacity`
+  flex-direction: row;
   align-items: center;
-  justify-content: center;
-  width: 30%;
+  width: 32%;
+  height: 40%;
   background-color: #1c1c1e;
-  border-radius: 10px;
-  padding: 15px;
+  border-radius: 12px;
+  margin-bottom: 3%;
+  padding: 7px;
   shadow-color: #000;
   shadow-offset: 0px 2px;
   shadow-opacity: 0.8;
@@ -278,11 +296,14 @@ const AlgorithmButton = styled.TouchableOpacity`
 `;
 
 const AlgorithmIcon = styled.Image`
- margin-bottom: 10px;
+ width: 31px;
+ height: 32px;
+ margin-right: 7px;
 `;
 
 const AlgorithmText = styled.Text`
-  font-size: 14px;
+  font-size: 12px;
   color: #fff;
-  text-align: center;
+  text-align: left;
+  font-family: ${(props) => props.theme.fonts.regular};
 `;

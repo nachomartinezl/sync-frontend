@@ -27,20 +27,21 @@ const Container = styled.View`
   justify-content: center;
   align-items: center;
   background-color: ${(props) => props.theme.colors.background};
-  padding: 20px;
+  padding: 1%;
 `;
 
 const Subtitle = styled.Text`
   font-size: 22px;
   color: ${(props) => props.theme.colors.primary};
   margin-bottom: 40px;
+  font-family: ${(props) => props.theme.fonts.bold};
 `;
 
 const Title = styled.Text`
   font-size: 18px;
-  font-weight: bold;
   margin-bottom: 40px;
   color: ${(props) => props.theme.colors.primary};
+  font-family: ${(props) => props.theme.fonts.bold};
 `;
 
 const ButtonGroup = styled.View`
@@ -56,4 +57,5 @@ const FooterText = styled.Text`
   position: absolute;
   bottom: 20px;
   padding: 0 20px;
+  font-family: ${(props) => props.theme.fonts.regular}
 `;

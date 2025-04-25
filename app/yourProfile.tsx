@@ -85,7 +85,7 @@ export default function PersonalDataStep3() {
 
       {error && <ErrorText>{error}</ErrorText>}
 
-      <WhiteButton onPress={handleSubmit} title="Next" />
+      <WhiteButton onPress={handleSubmit} title="Submit" />
     </Container>
   );
 }
@@ -96,7 +96,7 @@ const Container = styled.View`
   justify-content: flex-start;
   align-items: center;
   background-color: ${(props) => props.theme.colors.background};
-  padding: 20px;
+  padding: 1%;
   padding-top: 100px;
 `;
 

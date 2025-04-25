@@ -1,8 +1,15 @@
 # Matchmaker Mobile App
 
-A modern dating and social connection app built with React Native
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](LICENSE)
+[![React Native](https://img.shields.io/badge/Built%20with-React%20Native-61dafb?logo=react&logoColor=white&style=flat-square)](https://reactnative.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-4.x+-3178c6?logo=typescript&style=flat-square)](https://www.typescriptlang.org/)
+[![Android](https://img.shields.io/badge/Android-Supported-3ddc84?logo=android&style=flat-square)](https://developer.android.com/)
+[![iOS](https://img.shields.io/badge/iOS-Supported-000?logo=apple&style=flat-square)](https://developer.apple.com/)
+[![Expo Ready](https://img.shields.io/badge/Expo-Ready-000020?logo=expo&style=flat-square)](https://expo.dev/)
+[![Dark/Light Mode](https://img.shields.io/badge/Theme-Dark%20%2F%20Light-informational?style=flat-square)](#)
+[![Astrological Matchmaking](https://img.shields.io/badge/Features-Astrological%20Matchmaking-purple?style=flat-square)](#)
 
-![App Preview](screenshots/app-preview.png)
+A modern dating and social connection app built with React Native
 
 ## Features
 
@@ -89,4 +96,4 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 ## Contact
 
-Your Name - [@your_twitter](https://twitter.com/your_handle) - your.email@example.com
+Nacho - [@nachomartinezl](https://twitter.com/your_handle) - ignaciomartinezlombardero@gmail.com

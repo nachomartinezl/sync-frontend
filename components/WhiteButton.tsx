@@ -29,8 +29,8 @@ const Button = styled.TouchableOpacity`
 const ButtonText = styled.Text`
   color: black;
   font-size: ${(props) => props.theme.fontSizes.small};
-  font-weight: bold;
   text-align: center;
+  font-family: ${(props) => props.theme.fonts.bold}
 `;
 
 export default React.memo(WhiteButton);

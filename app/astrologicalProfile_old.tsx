@@ -1,3 +1,4 @@
+// astrologicalProfile.tsx
 import React, { useState } from "react";
 import styled from "styled-components/native";
 import { ScrollView, Alert } from "react-native";
@@ -5,8 +6,9 @@ import { useRouter } from "expo-router";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { AstrologicalProfile } from "../types";
 import { updateAstrologicalProfile } from "../api/api";
+import InputField from "../components/InputField";
+import StartButton from "../components/StartButton";
 import LoadingIndicator from "../components/LoadingIndicator";
-import WhiteButton from "../components/WhiteButton";
 
 export default function AstrologicalProfileScreen() {
   const router = useRouter();
@@ -20,8 +22,13 @@ export default function AstrologicalProfileScreen() {
   const [isTimePickerVisible, setTimePickerVisibility] = useState<boolean>(false);
   const [loadingStep, setLoadingStep] = useState<string | null>(null);
 
-  const showTimePicker = () => setTimePickerVisibility(true);
-  const hideTimePicker = () => setTimePickerVisibility(false);
+  const showTimePicker = () => {
+    setTimePickerVisibility(true);
+  };
+
+  const hideTimePicker = () => {
+    setTimePickerVisibility(false);
+  };
 
   const handleConfirm = (selectedTime: Date) => {
     setProfile({ ...profile, timeOfBirth: selectedTime });
@@ -58,7 +65,7 @@ export default function AstrologicalProfileScreen() {
 
   const handleSubmit = async () => {
     try {
-      const latitude = 40.7128;
+      const latitude = 40.7128; 
       const longitude = -74.006;
 
       const astrologicalData = {
@@ -69,107 +76,67 @@ export default function AstrologicalProfileScreen() {
 
       const result = await updateAstrologicalProfile(astrologicalData);
       console.log("Astrological profile updated:", result);
-      Alert.alert("Thank you!", "Your astrological profile has been generated.", [
-        { text: "OK", onPress: () => router.push("/dashboard") },
-      ]);
+      Alert.alert(
+        "Thank you!",
+        "Your astrological profile has been generated.",
+        [
+          {
+            text: "OK",
+            onPress: () => router.push("/dashboard"),
+          },
+        ]
+      );
     } catch (error) {
       console.error("Failed to update astrological profile:", error);
-      Alert.alert("Error", "There was a problem updating your astrological profile. Please try again.");
+      Alert.alert(
+        "Error",
+        "There was a problem updating your astrological profile. Please try again."
+      );
     }
   };
 
   return (
     <Container>
-      <BackButton onPress={() => router.back()}>
-        <BackArrow>←</BackArrow>
-      </BackButton>
-
+      <ScrollView>
         <Title>Astrological Profile</Title>
-
-        {/* Time of Birth Input */}
-        <TouchableInput onPress={showTimePicker} activeOpacity={1}>
-          <InputText>{profile.timeOfBirth.toLocaleTimeString() || "Select Time"}</InputText>
-        </TouchableInput>
+        <InputField
+          label="Exact Time of Birth"
+          placeholder="Select Time"
+          value={profile.timeOfBirth.toLocaleTimeString()}
+          onPress={showTimePicker}
+          editable={false}
+          placeholderTextColor="#888"
+        />
         <DateTimePickerModal
           isVisible={isTimePickerVisible}
           mode="time"
           onConfirm={handleConfirm}
           onCancel={hideTimePicker}
         />
-
-        {/* Place of Birth Input */}
-        <Input
-          placeholder="Place of Birth"
+        <InputField
+          label="Place of Birth"
+          placeholder="Enter Place of Birth"
           value={profile.pob}
           onChangeText={handlePobChange}
           placeholderTextColor="#888"
         />
-
-        {/* Start Calculation Button */}
-        <WhiteButton onPress={startCalculation} title="Start Calculation" />
+        <StartButton onPress={startCalculation} title="Start Calculation" />
         {loadingStep && <LoadingIndicator text={loadingStep} />}
+      </ScrollView>
     </Container>
   );
 }
 
-// Styled Components
 const Container = styled.View`
   flex: 1;
-  justify-content: flex-start;
-  align-items: center;
+  padding: 20px;
   background-color: ${(props) => props.theme.colors.background};
-  padding: 1%;
-  padding-top: 100px;
-`;
-
-const BackButton = styled.TouchableOpacity`
-  position: absolute;
-  top: 20px;
-  left: 20px;
-`;
-
-const BackArrow = styled.Text`
-  font-size: 24px;
-  color: ${(props) => props.theme.colors.primary};
 `;
 
 const Title = styled.Text`
-  font-size: ${(props) => props.theme.fontSizes.large};
+  font-size: 24px;
   font-weight: bold;
-  margin-bottom: 20px;
   color: ${(props) => props.theme.colors.primary};
-`;
-
-const Input = styled.TextInput`
-  width: 90%;
-  height: 50px;
-  background-color: ${(props) => props.theme.colors.secondary};
-  border-radius: 12px;
   margin-bottom: 20px;
-  padding: 10px;
-  color: ${(props) => props.theme.colors.primary};
-  elevation: 5;
-  font-size: 16px;
-`;
-
-const TouchableInput = styled.TouchableOpacity`
-  width: 90%;
-  height: 50px;
-  background-color: ${(props) => props.theme.colors.secondary};
-  border-radius: 12px;
-  margin-bottom: 20px;
-  padding: 10px;
-  justify-content: center;
-  elevation: 5;
-`;
-
-const InputText = styled.Text`
-  color: #888;
-  font-size: 16px;
-`;
-
-const ButtonText = styled.Text`
-  color: ${(props) => props.theme.colors.background};
-  font-size: 16px;
-  font-weight: bold;
+  text-align: center;
 `;

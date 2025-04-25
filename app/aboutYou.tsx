@@ -80,7 +80,7 @@ const Container = styled.View`
   justify-content: flex-start;
   align-items: center;
   background-color: ${(props) => props.theme.colors.background};
-  padding: 20px;
+  padding: 1%;
   padding-top: 100px;
 `;
 
@@ -104,7 +104,7 @@ const Title = styled.Text`
 
 const Input = styled.TextInput`
   width: 90%;
-  height: 45px;
+  height: 50px;
   background-color: ${(props) => props.theme.colors.secondary};
   border-radius: 12px;
   margin-bottom: 20px;
@@ -116,7 +116,7 @@ const Input = styled.TextInput`
 
 const PickerWrapper = styled.View`
   width: 90%;
-  height: 45px;
+  height: 50px;
   background-color: ${(props) => props.theme.colors.secondary};
   border-radius: 12px;
   margin-bottom: 20px;

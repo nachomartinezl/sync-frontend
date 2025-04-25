@@ -72,7 +72,7 @@ const Container = styled.View`
   justify-content: flex-start;
   align-items: center;
   background-color: ${(props) => props.theme.colors.background};
-  padding: 20px;
+  padding: 1%;
   padding-top: 100px;
 `;
 
@@ -89,9 +89,9 @@ const BackArrow = styled.Text`
 
 const Title = styled.Text`
   font-size: ${(props) => props.theme.fontSizes.large};
-  font-weight: bold;
   margin-bottom: 20px;
   color: ${(props) => props.theme.colors.primary};
+  font-family: ${(props) => props.theme.fonts.bold};
 `;
 
 const Input = styled.TextInput`
@@ -103,6 +103,7 @@ const Input = styled.TextInput`
   padding: 10px;
   color: ${(props) => props.theme.colors.primary};
   elevation: 5;
+  font-family: ${(props) => props.theme.fonts.regular};
 `;
 
 const ErrorText = styled.Text`

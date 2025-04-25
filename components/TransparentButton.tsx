@@ -27,6 +27,7 @@ const ButtonText = styled.Text`
   color: ${(props) => props.theme.colors.primary};
   font-size: ${(props) => props.theme.fontSizes.small};
   text-align: center;
+  font-family: ${(props) => props.theme.fonts.bold}
 `;
 
 export default React.memo(TransparentButton);

@@ -102,7 +102,7 @@ const Container = styled.View`
   justify-content: flex-start;
   align-items: center;
   background-color: ${(props) => props.theme.colors.background};
-  padding: 20px;
+  padding: 1%;
   padding-top: 100px;
 `;
 
@@ -119,14 +119,14 @@ const BackArrow = styled.Text`
 
 const Title = styled.Text`
   font-size: ${(props) => props.theme.fontSizes.large};
-  font-weight: bold;
   margin-bottom: 20px;
   color: ${(props) => props.theme.colors.primary};
+  font-family: ${(props) => props.theme.fonts.bold};
 `;
 
 const Input = styled.TextInput`
   width: 90%;
-  height: 45px;
+  height: 50px;
   background-color: ${(props) => props.theme.colors.secondary};
   border-radius: 12px;
   margin-bottom: 20px;
@@ -134,11 +134,12 @@ const Input = styled.TextInput`
   color: ${(props) => props.theme.colors.primary};
   elevation: 5;
   font-size: 16px;
+  font-family: ${(props) => props.theme.fonts.regular};
 `;
 
 const TouchableInput = styled.TouchableOpacity`
   width: 90%;
-  height: 45px;
+  height: 50px;
   background-color: ${(props) => props.theme.colors.secondary};
   border-radius: 12px;
   margin-bottom: 20px;
@@ -150,11 +151,12 @@ const TouchableInput = styled.TouchableOpacity`
 const InputText = styled.Text`
   color: #888;
   font-size: 16px;
+  font-family: ${(props) => props.theme.fonts.regular};
 `;
 
 const PickerWrapper = styled.View`
   width: 90%;
-  height: 45px;
+  height: 50px;
   background-color: ${(props) => props.theme.colors.secondary};
   border-radius: 12px;
   margin-bottom: 20px;

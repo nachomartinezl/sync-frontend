@@ -152,7 +152,7 @@ const InfoItem = styled.TouchableOpacity`
   width: 23%; 
   background-color: #1c1c1e;
   border-radius: 10px;
-  padding: 2px; 
+  padding: 10px; 
   shadow-color: #000;
   shadow-offset: 0px 2px;
   shadow-opacity: 0.8;
