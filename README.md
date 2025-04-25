@@ -1,50 +1,92 @@
-# Welcome to your Expo app 👋
+# Matchmaker Mobile App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A modern dating and social connection app built with React Native
 
-## Get started
+![App Preview](screenshots/app-preview.png)
 
-1. Install dependencies
+## Features
 
-   ```bash
-   npm install
-   ```
+- 👤 User profile management with astrological compatibility
+- 💌 Real-time matchmaking algorithm
+- 📅 Interactive date scheduling with status tracking
+- 📊 Compatibility metrics and visualization
+- 🎨 Customizable UI component library
+- 🌙 Dark/Light mode support
 
-2. Start the app
+## Key Components
 
-   ```bash
-    npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
+```plaintext
+components/
+├── AstrologicalItem.tsx    - Displays zodiac compatibility info
+├── DatesSection.tsx        - Manages date appointments and status
+├── CompletenessBar.tsx     - Shows profile completion progress
+├── InterestList.tsx        - Displays user interest categories
+├── ProfileImage.tsx        - Circular user profile photo
+├── QuestionContainer.tsx   - Interactive compatibility questions
+└── ...20+ specialized components
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## Getting Started
 
-## Learn more
+### Prerequisites
+- Node.js 16+
+- npm/yarn
+- React Native CLI
+- Android Studio/Xcode (for simulators)
 
-To learn more about developing your project with Expo, look at the following resources:
+### Installation
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+```bash
+git clone https://github.com/your-username/matchmaker-app.git
+cd matchmaker-app
+yarn install
+```
 
-## Join the community
+### Running the App
 
-Join our community of developers creating universal apps.
+```bash
+# Start Metro bundler
+yarn start
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+# Android
+yarn android
+
+# iOS
+yarn ios
+```
+
+## Configuration
+
+1. Copy `.env.example` to `.env`
+2. Add your API endpoints and configuration:
+```env
+API_BASE_URL=your_api_url_here
+WEBSOCKET_URL=your_ws_url_here
+GOOGLE_MAPS_API_KEY=your_key_here
+```
+
+## Technology Stack
+
+- React Native 0.72+
+- TypeScript
+- React Navigation 6.x
+- Styled Components
+- React Hook Form
+- Axios for API calls
+- react-native-dotenv for environment variables
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## License
+
+Distributed under the MIT License. See `LICENSE` for more information.
+
+## Contact
+
+Your Name - [@your_twitter](https://twitter.com/your_handle) - your.email@example.com
