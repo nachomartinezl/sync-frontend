@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components/native";
 import { ScrollView, Alert } from "react-native";
 import { useRouter } from "expo-router";
+import { theme } from "../theme";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { AstrologicalProfile } from "../types";
 import { updateAstrologicalProfile } from "../api/api";
@@ -58,13 +59,9 @@ export default function AstrologicalProfileScreen() {
 
   const handleSubmit = async () => {
     try {
-      const latitude = 40.7128;
-      const longitude = -74.006;
-
       const astrologicalData = {
         birthTime: profile.timeOfBirth.toTimeString().split(" ")[0],
-        latitude,
-        longitude,
+        placeOfBirth: profile.pob,
       };
 
       const result = await updateAstrologicalProfile(astrologicalData);
@@ -102,7 +99,7 @@ export default function AstrologicalProfileScreen() {
           placeholder="Place of Birth"
           value={profile.pob}
           onChangeText={handlePobChange}
-          placeholderTextColor="#888"
+          placeholderTextColor={theme.colors.placeholder}
         />
 
         {/* Start Calculation Button */}
@@ -164,7 +161,7 @@ const TouchableInput = styled.TouchableOpacity`
 `;
 
 const InputText = styled.Text`
-  color: #888;
+  color: ${(props) => props.theme.colors.placeholder};
   font-size: 16px;
 `;
 

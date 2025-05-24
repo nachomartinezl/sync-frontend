@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components/native";
 import { useRouter } from "expo-router";
+import { theme } from "../theme";
 import DatePicker from "react-native-date-picker";
 import { Picker } from "@react-native-picker/picker";
 import WhiteButton from "../components/WhiteButton";
@@ -45,7 +46,7 @@ export default function PersonalDataStep1() {
         placeholder="Name"
         value={personalData.name}
         onChangeText={(name) => setPersonalData({ ...personalData, name })}
-        placeholderTextColor="#888"
+        placeholderTextColor={theme.colors.placeholder}
       />
 
       <Input
@@ -54,7 +55,7 @@ export default function PersonalDataStep1() {
         onChangeText={(surname) =>
           setPersonalData({ ...personalData, surname })
         }
-        placeholderTextColor="#888"
+        placeholderTextColor={theme.colors.placeholder}
       />
 
       <TouchableInput
@@ -149,7 +150,7 @@ const TouchableInput = styled.TouchableOpacity`
 `;
 
 const InputText = styled.Text`
-  color: #888;
+  color: ${(props) => props.theme.colors.placeholder};
   font-size: 16px;
   font-family: ${(props) => props.theme.fonts.regular};
 `;
@@ -165,5 +166,5 @@ const PickerWrapper = styled.View`
 `;
 
 const pickerStyles = {
-  color: "#888", 
+  color: theme.colors.placeholder, 
 };

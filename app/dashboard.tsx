@@ -164,7 +164,7 @@ const GreetingText = styled.Text`
 
 const CompletionText = styled.Text`
   font-size: 14px;
-  color: #9eabb8;
+  color: ${(props) => props.theme.colors.textSecondary};
   font-family: ${(props) => props.theme.fonts.regular};
 `;
 
@@ -211,7 +211,7 @@ const DateDetails = styled.View`
 `;
 
 const StatusContainer = styled.View`
-  background-color: #008043;
+  background-color: ${(props) => props.theme.colors.accept};
   padding: 5px;
   border-radius: 6px;
   margin-bottom: 2%;
@@ -219,7 +219,7 @@ const StatusContainer = styled.View`
 `;
 
 const Status = styled.Text`
-  color: white;
+  color: ${(props) => props.theme.colors.primary};
   font-size: 14px;
   text-align: center;
 `;
@@ -284,7 +284,7 @@ const AlgorithmButton = styled.TouchableOpacity`
   align-items: center;
   width: 32%;
   height: 40%;
-  background-color: #1c1c1e;
+  background-color: ${(props) => props.theme.colors.cardBackground};
   border-radius: 12px;
   margin-bottom: 3%;
   padding: 7px;
@@ -303,7 +303,7 @@ const AlgorithmIcon = styled.Image`
 
 const AlgorithmText = styled.Text`
   font-size: 12px;
-  color: #fff;
+  color: ${(props) => props.theme.colors.primary};
   text-align: left;
   font-family: ${(props) => props.theme.fonts.regular};
 `;

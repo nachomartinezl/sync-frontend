@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components/native";
 import { useRouter, useLocalSearchParams } from "expo-router";
+import { theme } from "../theme";
 import axios from "axios";
 import WhiteButton from "../components/WhiteButton";
 import { updateProfile, uploadProfilePicture } from "../api/api"; // Import your API call
@@ -78,7 +79,7 @@ export default function PersonalDataStep3() {
         placeholder="Tell others about you..."
         value={personalData.bio}
         onChangeText={(bio) => setPersonalData({ ...personalData, bio })}
-        placeholderTextColor="#888"
+        placeholderTextColor={theme.colors.placeholder}
         multiline
         numberOfLines={4}
       />

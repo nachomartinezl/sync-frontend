@@ -52,7 +52,7 @@ const ButtonGroup = styled.View`
 
 const FooterText = styled.Text`
   font-size: 14px;
-  color: #9EABB8;
+  color: ${(props) => props.theme.colors.textSecondary};
   text-align: center;
   position: absolute;
   bottom: 20px;

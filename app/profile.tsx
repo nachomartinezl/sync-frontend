@@ -79,7 +79,7 @@ const Container = styled.View`
   flex: 1;
   justify-content: flex-start;
   align-items: center;
-  background-color: #121212;
+  background-color: ${(props) => props.theme.colors.background};
   padding: 10px;
   padding-top: 15%;
 `;
@@ -97,7 +97,7 @@ const BackArrow = styled.Text`
 
 const UserName = styled.Text`
   font-size: 24px;
-  color: white;
+  color: ${(props) => props.theme.colors.primary};
   font-weight: bold;
   margin-bottom: 20px;
 `;
@@ -117,14 +117,14 @@ const ProfileImage = styled.Image`
 `;
 
 const UpdateText = styled.Text`
-  color: white;
+  color: ${(props) => props.theme.colors.primary};
   font-size: 16px;
   font-weight: bold;
   margin-top: 10px;
 `;
 
 const BioCard = styled.View`
-  background-color: #1e1e1e;
+  background-color: ${(props) => props.theme.colors.cardBackground};
   border-radius: 12px;
   padding: 20px;
   margin-bottom: 20px;
@@ -133,7 +133,7 @@ const BioCard = styled.View`
 `;
 
 const BioText = styled.Text`
-  color: white;
+  color: ${(props) => props.theme.colors.primary};
   font-size: 16px;
   text-align: left;
 `;
@@ -144,7 +144,7 @@ const Section = styled.View`
 `;
 
 const SectionTitle = styled.Text`
-  color: white;
+  color: ${(props) => props.theme.colors.primary};
   font-size: 18px;
   font-weight: bold;
   margin-bottom: 10px;
@@ -155,12 +155,12 @@ const PreferenceContainer = styled.View`
   align-items: center;
   justify-content: space-between;
   padding: 15px;
-  background-color: #1e1e1e;
+  background-color: ${(props) => props.theme.colors.cardBackground};
   border-radius: 12px;
 `;
 
 const PreferenceText = styled.Text`
-  color: white;
+  color: ${(props) => props.theme.colors.primary};
   font-size: 16px;
 `;
 
@@ -178,13 +178,13 @@ const SettingsItem = styled.View`
   align-items: center;
   justify-content: space-between;
   padding: 15px;
-  background-color: #1e1e1e;
+  background-color: ${(props) => props.theme.colors.cardBackground};
   border-radius: 12px;
   margin-bottom: 15px;
 `;
 
 const SettingsText = styled.Text`
-  color: white;
+  color: ${(props) => props.theme.colors.primary};
   font-size: 16px;
 `;
 

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components/native";
 import { useRouter } from "expo-router";
+import { theme } from "../theme";
 import { UserCredentials, APIErrorResponse, ValidationError } from "../types";
 import { register } from "../api/api";
 import axios from "axios";
@@ -51,7 +52,7 @@ export default function RegisterScreen() {
         placeholder="Email"
         value={credentials.email}
         onChangeText={(email) => setCredentials({ ...credentials, email })}
-        placeholderTextColor="#888"
+        placeholderTextColor={theme.colors.placeholder}
       />
       
       <Input
@@ -59,7 +60,7 @@ export default function RegisterScreen() {
         secureTextEntry
         value={credentials.password}
         onChangeText={(password) => setCredentials({ ...credentials, password })}
-        placeholderTextColor="#888"
+        placeholderTextColor={theme.colors.placeholder}
       />
       
       <WhiteButton onPress={handleRegister} title="Next" />
