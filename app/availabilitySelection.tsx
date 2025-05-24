@@ -3,7 +3,7 @@ import styled from "styled-components/native";
 import { Alert } from "react-native";
 import { useRouter, useGlobalSearchParams } from "expo-router";
 import { Day, TimeSlot } from "../types";
-import { acceptMatchAndSendAvailability } from "../api/api";
+import { acceptMatchAndSendAvailability } from "../api/mockApi";
 import DayCircle from "../components/DayCircle";
 import ToggleButton from "../components/ToggleButton";
 import SubmitButton from "../components/SubmitButton";

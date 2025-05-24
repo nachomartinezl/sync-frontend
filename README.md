@@ -1,99 +1,82 @@
-# Matchmaker Mobile App
+# Developer README - SYNC App
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](LICENSE)
-[![React Native](https://img.shields.io/badge/Built%20with-React%20Native-61dafb?logo=react&logoColor=white&style=flat-square)](https://reactnative.dev/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-4.x+-3178c6?logo=typescript&style=flat-square)](https://www.typescriptlang.org/)
-[![Android](https://img.shields.io/badge/Android-Supported-3ddc84?logo=android&style=flat-square)](https://developer.android.com/)
-[![iOS](https://img.shields.io/badge/iOS-Supported-000?logo=apple&style=flat-square)](https://developer.apple.com/)
-[![Expo Ready](https://img.shields.io/badge/Expo-Ready-000020?logo=expo&style=flat-square)](https://expo.dev/)
-[![Dark/Light Mode](https://img.shields.io/badge/Theme-Dark%20%2F%20Light-informational?style=flat-square)](#)
-[![Astrological Matchmaking](https://img.shields.io/badge/Features-Astrological%20Matchmaking-purple?style=flat-square)](#)
+This document provides essential information for developers working on the SYNC mobile application. It focuses on the internal architecture, data flow, and conventions to aid in development and debugging.
 
-A modern dating and social connection app built with React Native
+## Directory Structure
 
-## Features
+The project follows a standard React Native (Expo) structure with some key directories:
 
-- 👤 User profile management with astrological compatibility
-- 💌 Real-time matchmaking algorithm
-- 📅 Interactive date scheduling with status tracking
-- 📊 Compatibility metrics and visualization
-- 🎨 Customizable UI component library
-- 🌙 Dark/Light mode support
+-   **/api/**: Contains API interaction logic.
+    -   `api.js`: Actual API calls to the backend using Axios. Handles token management.
+    -   `mockApi.js`: Mock implementations of API calls for offline development.
+    -   `storage.ts`: Abstraction for secure local storage (using MMKV) for tokens.
+-   **/app/**: Contains all screen components, organized by route. This is the primary working directory for UI development, using Expo Router's file-based routing.
+    -   `_layout.tsx`: Defines the main stack navigator and global providers like ThemeProvider.
+    -   `index.tsx`: The initial landing screen of the app.
+    -   Other `.tsx` files represent individual screens (e.g., `login.tsx`, `dashboard.tsx`, `profile.tsx`).
+-   **/assets/**: Static assets like fonts, icons, and images.
+-   **/components/**: Reusable UI components used across multiple screens (e.g., custom buttons, input fields, list items).
+-   **/constants/**: Global constants.
+    -   `Colors.ts`: Defines a color palette. (Note: `theme.js` at the root is also used for theming with styled-components, which might be a point of consolidation).
+-   **/hooks/**: Custom React hooks (e.g., `useThemeColor.ts`).
+-   **/theme.js**: Defines the theme (colors, fonts, font sizes) used by `styled-components`.
+-   **/types.ts**: Contains TypeScript type definitions used throughout the application.
+-   **/questions.js**: Contains questions for the personality test.
 
-## Key Components
+## Route Hierarchy
 
-```plaintext
-components/
-├── AstrologicalItem.tsx    - Displays zodiac compatibility info
-├── DatesSection.tsx        - Manages date appointments and status
-├── CompletenessBar.tsx     - Shows profile completion progress
-├── InterestList.tsx        - Displays user interest categories
-├── ProfileImage.tsx        - Circular user profile photo
-├── QuestionContainer.tsx   - Interactive compatibility questions
-└── ...20+ specialized components
-```
+Routing is managed by `expo-router`. The main navigation is defined in `app/_layout.tsx` as a stack navigator. Key routes include:
 
-## Getting Started
+-   `/` (app/index.tsx): Initial screen with Login/Register options.
+-   `/login` (app/login.tsx): User login screen.
+-   `/register` (app/register.tsx): User registration screen.
+-   Profile Creation Flow:
+    -   `/personalData` (app/personalData.tsx)
+    -   `/aboutYou` (app/aboutYou.tsx)
+    -   `/yourProfile` (app/yourProfile.tsx)
+-   Main App Screens (post-login):
+    -   `/dashboard` (app/dashboard.tsx): Central hub displaying matches, dates, profile summary.
+    -   `/profile` (app/profile.tsx): User's own profile view/edit screen.
+    -   `/matchDetails` (app/matchDetails.tsx): Screen to view details of a potential match.
+    -   `/availabilitySelection` (app/availabilitySelection.tsx): Screen for user to input their availability for a date.
+    -   `/dateDetails` (app/dateDetails.tsx): Screen to view details of a scheduled date.
+-   Profile Enrichment Screens (linked from Dashboard or Profile):
+    -   `/interests` (app/interests.tsx)
+    -   `/astrologicalProfile` (app/astrologicalProfile.tsx)
+    -   `/personalityTest` (app/personalityTest.tsx)
 
-### Prerequisites
-- Node.js 16+
-- npm/yarn
-- React Native CLI
-- Android Studio/Xcode (for simulators)
+Navigation between screens is typically handled using `useRouter()` from `expo-router`.
 
-### Installation
+## Data Flow
 
-```bash
-git clone https://github.com/your-username/matchmaker-app.git
-cd matchmaker-app
-yarn install
-```
+1.  **API Interaction**:
+    *   All backend API calls are defined in `api/api.js` (or mocked in `api/mockApi.js`).
+    *   Uses `axios` for requests.
+    *   Authentication tokens (JWT) are managed by helper functions in `api/api.js` and stored securely using `expo-secure-store` via `api/storage.ts`.
+2.  **State Management**:
+    *   No global state management library (like Redux or Zustand) is currently in use.
+    *   Screen-level state is managed using React's `useState` hook.
+    *   Data is passed between screens in a sequence (e.g., during profile creation) via navigation parameters.
+    *   Fetched data from APIs is typically stored in local component state.
+3.  **Data Persistence**:
+    *   User authentication tokens are persisted in secure storage.
+    *   Other application data is fetched from the backend as needed and not explicitly persisted client-side beyond component state, unless part of a form flow.
 
-### Running the App
+## Context/State Logic
 
-```bash
-# Start Metro bundler
-yarn start
+-   **ThemeProvider**: `styled-components`' `ThemeProvider` is used at the root in `app/_layout.tsx`, providing the theme defined in `theme.js` to all styled components.
+-   **Local State**: Most components and screens manage their own state internally. There's no overarching custom context for global application state observed.
 
-# Android
-yarn android
+## External Integrations & Dependencies
 
-# iOS
-yarn ios
-```
+-   **Backend API**: The app communicates with a custom backend (assumed to be at `http://10.0.2.2:3000/api` as per `api/api.js`).
+-   **`axios`**: For making HTTP requests to the backend.
+-   **`expo-secure-store` (via `react-native-mmkv` in `api/storage.ts`)**: For securely storing authentication tokens.
+-   **`expo-router`**: For file-system based routing and navigation.
+-   **`styled-components`**: For styling UI components.
+-   **`react-native-image-picker`**: For selecting images from the device gallery (used in profile picture upload).
+-   **`react-native-date-picker` / `@react-native-community/datetimepicker` / `react-native-modal-datetime-picker`**: Various libraries for date and time selection.
+-   **`@react-native-picker/picker`**: For dropdown selection.
+-   **`react-native-google-places-autocomplete`**: Listed in dependencies, likely for address input, but its specific usage context needs to be located during detailed component review.
 
-## Configuration
-
-1. Copy `.env.example` to `.env`
-2. Add your API endpoints and configuration:
-```env
-API_BASE_URL=your_api_url_here
-WEBSOCKET_URL=your_ws_url_here
-GOOGLE_MAPS_API_KEY=your_key_here
-```
-
-## Technology Stack
-
-- React Native 0.72+
-- TypeScript
-- React Navigation 6.x
-- Styled Components
-- React Hook Form
-- Axios for API calls
-- react-native-dotenv for environment variables
-
-## Contributing
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-## License
-
-Distributed under the MIT License. See `LICENSE` for more information.
-
-## Contact
-
-Nacho - [@nachomartinezl](https://twitter.com/your_handle) - ignaciomartinezlombardero@gmail.com
+This README should serve as a starting point for developers to navigate the codebase.

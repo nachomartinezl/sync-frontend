@@ -1,79 +1,9 @@
 import React, { useState } from "react";
 import styled from "styled-components/native";
-import { ScrollView, View, TouchableOpacity, Image } from "react-native";
+import { ScrollView, View, TouchableOpacity, Image, ImageSourcePropType } from "react-native";
 import { useRouter } from "expo-router";
 
-export default function ProfileSummaryScreen() {
-  const router = useRouter();
-  const [profileData] = useState({
-    name: "Devan",
-    bio: "Born in Sydney, currently traveling the world in pursuit of new experiences and adventures. Passionate about fitness and living an active lifestyle, constantly exploring new ways to challenge both mind and body.",
-    preference: "Women",
-    mainPicture:
-      "https://cdn.usegalileo.ai/stability/7fa5b77f-a521-4605-b8fe-86ed75b44f5a.png",
-  });
-
-  const { name, bio, mainPicture, preference } = profileData;
-
-  return (
-    <Container>
-      <BackButton onPress={() => router.back()}>
-        <BackArrow>←</BackArrow>
-      </BackButton>
-      {/* User Name on Top */}
-      <UserName>{name}</UserName>
-
-      {/* Profile Picture with Update Text */}
-      <ProfilePictureContainer>
-        <ProfileImage source={{ uri: mainPicture }} />
-        <TouchableOpacity>
-          <UpdateText>Update Photo</UpdateText>
-        </TouchableOpacity>
-      </ProfilePictureContainer>
-
-      {/* Bio */}
-      <BioCard>
-        <BioText>{bio}</BioText>
-      </BioCard>
-
-      {/* Preference Section */}
-      <Section>
-        <SectionTitle>Your preference</SectionTitle>
-        <TouchableOpacity>
-        <PreferenceContainer>
-          <PreferenceText>{preference}</PreferenceText>
-          <PreferenceIcon source={require("../assets/icons/women.png")} />
-        </PreferenceContainer>
-        </TouchableOpacity>
-      </Section>
-
-      {/* Settings Section */}
-      <Section>
-        <SectionTitle>Settings</SectionTitle>
-        <SettingsContainer>
-          <TouchableOpacity>
-            <SettingsItem>
-              <SettingsText>Change password</SettingsText>
-              <SettingsIconRight
-                source={require("../assets/icons/password.png")}
-              />
-            </SettingsItem>
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <SettingsItem>
-              <SettingsText>Phone number</SettingsText>
-              <SettingsIconRight
-                source={require("../assets/icons/phone.png")}
-              />
-            </SettingsItem>
-          </TouchableOpacity>
-        </SettingsContainer>
-      </Section>
-    </Container>
-  );
-}
-
-// Styled components
+// --- Styled Components (Modified for Theme Colors) ---
 
 const Container = styled.View`
   flex: 1;
@@ -88,6 +18,7 @@ const BackButton = styled.TouchableOpacity`
   position: absolute;
   top: 20px;
   left: 20px;
+  z-index: 1; /* Ensure back button is clickable */
 `;
 
 const BackArrow = styled.Text`
@@ -112,19 +43,19 @@ const ProfileImage = styled.Image`
   width: 150px;
   height: 150px;
   border-radius: 12px;
-  background-color: #333;
+  background-color: ${(props) => props.theme.colors.secondary}; /* Theme color */
   margin-bottom: 10px;
 `;
 
 const UpdateText = styled.Text`
-  color: ${(props) => props.theme.colors.primary};
+  color: ${(props) => props.theme.colors.primary}; /* Theme color */
   font-size: 16px;
   font-weight: bold;
   margin-top: 10px;
 `;
 
 const BioCard = styled.View`
-  background-color: ${(props) => props.theme.colors.cardBackground};
+  background-color: ${(props) => props.theme.colors.cardBackground}; /* Theme color */
   border-radius: 12px;
   padding: 20px;
   margin-bottom: 20px;
@@ -133,7 +64,7 @@ const BioCard = styled.View`
 `;
 
 const BioText = styled.Text`
-  color: ${(props) => props.theme.colors.primary};
+  color: ${(props) => props.theme.colors.primary}; /* Theme color */
   font-size: 16px;
   text-align: left;
 `;
@@ -144,7 +75,7 @@ const Section = styled.View`
 `;
 
 const SectionTitle = styled.Text`
-  color: ${(props) => props.theme.colors.primary};
+  color: ${(props) => props.theme.colors.primary}; /* Theme color */
   font-size: 18px;
   font-weight: bold;
   margin-bottom: 10px;
@@ -155,12 +86,12 @@ const PreferenceContainer = styled.View`
   align-items: center;
   justify-content: space-between;
   padding: 15px;
-  background-color: ${(props) => props.theme.colors.cardBackground};
+  background-color: ${(props) => props.theme.colors.cardBackground}; /* Theme color */
   border-radius: 12px;
 `;
 
 const PreferenceText = styled.Text`
-  color: ${(props) => props.theme.colors.primary};
+  color: ${(props) => props.theme.colors.primary}; /* Theme color */
   font-size: 16px;
 `;
 
@@ -178,13 +109,13 @@ const SettingsItem = styled.View`
   align-items: center;
   justify-content: space-between;
   padding: 15px;
-  background-color: ${(props) => props.theme.colors.cardBackground};
+  background-color: ${(props) => props.theme.colors.cardBackground}; /* Theme color */
   border-radius: 12px;
   margin-bottom: 15px;
 `;
 
 const SettingsText = styled.Text`
-  color: ${(props) => props.theme.colors.primary};
+  color: ${(props) => props.theme.colors.primary}; /* Theme color */
   font-size: 16px;
 `;
 
@@ -192,3 +123,122 @@ const SettingsIconRight = styled.Image`
   width: 22px;
   height: 22px;
 `;
+
+// --- Sub-Components ---
+
+interface ProfileHeaderProps {
+  name: string;
+  mainPicture: string;
+  onUpdatePhotoPress: () => void;
+}
+
+const ProfileHeader: React.FC<ProfileHeaderProps> = ({ name, mainPicture, onUpdatePhotoPress }) => (
+  <>
+    <UserName>{name}</UserName>
+    <ProfilePictureContainer>
+      <ProfileImage source={{ uri: mainPicture }} />
+      <TouchableOpacity onPress={onUpdatePhotoPress}>
+        <UpdateText>Update Photo</UpdateText>
+      </TouchableOpacity>
+    </ProfilePictureContainer>
+  </>
+);
+
+interface BioSectionProps {
+  bio: string;
+}
+
+const BioSection: React.FC<BioSectionProps> = ({ bio }) => (
+  <BioCard>
+    <BioText>{bio}</BioText>
+  </BioCard>
+);
+
+interface PreferenceDisplayProps {
+  preference: string;
+  iconSource: ImageSourcePropType;
+  onPress: () => void;
+}
+
+const PreferenceDisplay: React.FC<PreferenceDisplayProps> = ({ preference, iconSource, onPress }) => (
+  <TouchableOpacity onPress={onPress}>
+    <PreferenceContainer>
+      <PreferenceText>{preference}</PreferenceText>
+      <PreferenceIcon source={iconSource} />
+    </PreferenceContainer>
+  </TouchableOpacity>
+);
+
+interface SettingsLinkItemProps {
+  text: string;
+  iconSource: ImageSourcePropType;
+  onPress: () => void;
+}
+
+const SettingsLinkItem: React.FC<SettingsLinkItemProps> = ({ text, iconSource, onPress }) => (
+  <TouchableOpacity onPress={onPress}>
+    <SettingsItem>
+      <SettingsText>{text}</SettingsText>
+      <SettingsIconRight source={iconSource} />
+    </SettingsItem>
+  </TouchableOpacity>
+);
+
+
+// --- Main Profile Screen ---
+
+export default function ProfileSummaryScreen() {
+  const router = useRouter();
+  const [profileData] = useState({
+    name: "Devan",
+    bio: "Born in Sydney, currently traveling the world in pursuit of new experiences and adventures. Passionate about fitness and living an active lifestyle, constantly exploring new ways to challenge both mind and body.",
+    preference: "Women",
+    mainPicture:
+      "https://cdn.usegalileo.ai/stability/7fa5b77f-a521-4605-b8fe-86ed75b44f5a.png",
+  });
+
+  const { name, bio, mainPicture, preference } = profileData;
+
+  // Placeholder functions for onPress actions
+  const handleUpdatePhoto = () => console.log("Update photo pressed");
+  const handlePreferencePress = () => console.log("Preference pressed");
+  const handleChangePassword = () => console.log("Change password pressed");
+  const handlePhoneNumber = () => console.log("Phone number pressed");
+
+  return (
+    <Container>
+      <BackButton onPress={() => router.back()}>
+        <BackArrow>←</BackArrow>
+      </BackButton>
+      
+      <ProfileHeader name={name} mainPicture={mainPicture} onUpdatePhotoPress={handleUpdatePhoto} />
+      
+      <BioSection bio={bio} />
+
+      <Section>
+        <SectionTitle>Your preference</SectionTitle>
+        <PreferenceDisplay 
+          preference={preference} 
+          iconSource={require("../assets/icons/women.png")} 
+          onPress={handlePreferencePress} 
+        />
+      </Section>
+
+      <Section>
+        <SectionTitle>Settings</SectionTitle>
+        <SettingsContainer>
+          <SettingsLinkItem 
+            text="Change password" 
+            iconSource={require("../assets/icons/password.png")} 
+            onPress={handleChangePassword} 
+          />
+          <SettingsLinkItem 
+            text="Phone number" 
+            iconSource={require("../assets/icons/phone.png")} 
+            onPress={handlePhoneNumber} 
+          />
+        </SettingsContainer>
+      </Section>
+    </Container>
+  );
+}

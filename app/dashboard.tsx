@@ -52,6 +52,62 @@ const ALGORITHM_ICONS = {
   values: require("../assets/icons/values.png"),
 };
 
+// --- Sub-Components ---
+
+// 1. DashboardDateCard Component
+interface DashboardDateCardProps {
+  appointment: typeof APPOINTMENT;
+}
+const DashboardDateCard: React.FC<DashboardDateCardProps> = ({ appointment }) => (
+  <>
+    <DateImage source={{ uri: appointment.picture }} />
+    <DateDetails>
+      <NameText>{appointment.name}</NameText>
+      <PlaceText>{appointment.place}</PlaceText>
+      <DateText>{appointment.datetime}</DateText>
+      <StatusContainer>
+        <Status>{appointment.status}</Status>
+      </StatusContainer>
+    </DateDetails>
+  </>
+);
+
+// 2. DashboardMatchCard Component
+interface DashboardMatchCardProps {
+  match: typeof MATCHES[0];
+}
+const DashboardMatchCard: React.FC<DashboardMatchCardProps> = ({ match }) => (
+  <>
+    <MatchImage source={{ uri: match.picture }} />
+    <MatchName>
+      {match.name}, {match.age}
+    </MatchName>
+  </>
+);
+
+// 3. DashboardAlgorithmButton Component
+interface DashboardAlgorithmButtonProps {
+  icon: any; // Adjust type as per require() output, typically ImageSourcePropType
+  text: string;
+}
+const DashboardAlgorithmButton: React.FC<DashboardAlgorithmButtonProps> = ({ icon, text }) => (
+  <>
+    <AlgorithmIcon source={icon} />
+    <AlgorithmText>{text}</AlgorithmText>
+  </>
+);
+
+// --- Main Dashboard Screen ---
+
+const algorithmButtonsConfig = [
+  { text: "Personality", icon: ALGORITHM_ICONS.personality, route: "/personalityTest" },
+  { text: "Character", icon: ALGORITHM_ICONS.character, route: "/personalityTest" }, // Assuming same route for now
+  { text: "Emotional", icon: ALGORITHM_ICONS.emotional, route: "/personalityTest" }, // Assuming same route for now
+  { text: "Astrology", icon: ALGORITHM_ICONS.astrological, route: "/astrologicalProfile" },
+  { text: "Interests", icon: ALGORITHM_ICONS.interests, route: "/interests" },
+  { text: "Values", icon: ALGORITHM_ICONS.values, route: "/interests" }, // Assuming same route for now
+];
+
 export default function DashboardScreen() {
   const router = useRouter();
   const [name, setName] = useState("Devan");
@@ -66,7 +122,6 @@ export default function DashboardScreen() {
             Your profile is {completeness * 100}% complete
           </CompletionText>
         </ProfileSection>
-        {/* Wrap ProfileImage with TouchableOpacity to handle onPress */}
         <TouchableOpacity onPress={() => router.push("/profile")}>
           <ProfileImage source={{ uri: PROFILE_IMAGE_URL }} />
         </TouchableOpacity>
@@ -76,28 +131,16 @@ export default function DashboardScreen() {
         <Section flex={0.8}>
           <SectionTitle>Your date</SectionTitle>
           <DateCard onPress={() => router.push("/dateDetails")}>
-            <DateImage source={{ uri: APPOINTMENT.picture }} />
-            <DateDetails>
-              <NameText>{APPOINTMENT.name}</NameText>
-              <PlaceText>{APPOINTMENT.place}</PlaceText>
-              <DateText>{APPOINTMENT.datetime}</DateText>
-              <StatusContainer>
-              <Status>{APPOINTMENT.status}</Status>
-              </StatusContainer>
-            </DateDetails>
+            <DashboardDateCard appointment={APPOINTMENT} />
           </DateCard>
         </Section>
 
         <Section flex={1}>
           <SectionTitle>Matches</SectionTitle>
           <MatchesGrid>
-            {/* Navigate to /matches when the first match is clicked */}
             {MATCHES.map((m, idx) => (
               <MatchCard key={idx} onPress={() => idx === 0 && router.push("/matchDetails")}>
-                <MatchImage source={{ uri: m.picture }} />
-                <MatchName>
-                  {m.name}, {m.age}
-                </MatchName>
+                <DashboardMatchCard match={m} />
               </MatchCard>
             ))}
           </MatchesGrid>
@@ -106,31 +149,11 @@ export default function DashboardScreen() {
         <Section flex={0.8}>
           <SectionTitle>Train your algorithm</SectionTitle>
           <AlgorithmSection>
-            {/* Each button navigates to the respective route */}
-            <AlgorithmButton onPress={() => router.push("/personalityTest")}>
-              <AlgorithmIcon source={ALGORITHM_ICONS.personality} />
-              <AlgorithmText>Personality</AlgorithmText>
-            </AlgorithmButton>
-            <AlgorithmButton onPress={() => router.push("/personalityTest")}>
-              <AlgorithmIcon source={ALGORITHM_ICONS.character} />
-              <AlgorithmText>Character</AlgorithmText>
-            </AlgorithmButton>
-            <AlgorithmButton onPress={() => router.push("/personalityTest")}>
-              <AlgorithmIcon source={ALGORITHM_ICONS.emotional} />
-              <AlgorithmText>Emotional</AlgorithmText>
-            </AlgorithmButton>
-            <AlgorithmButton onPress={() => router.push("/astrologicalProfile")}>
-              <AlgorithmIcon source={ALGORITHM_ICONS.astrological} />
-              <AlgorithmText>Astrology</AlgorithmText>
-            </AlgorithmButton>
-            <AlgorithmButton onPress={() => router.push("/interests")}>
-              <AlgorithmIcon source={ALGORITHM_ICONS.interests} />
-              <AlgorithmText>Interests</AlgorithmText>
-            </AlgorithmButton>
-            <AlgorithmButton onPress={() => router.push("/interests")}>
-              <AlgorithmIcon source={ALGORITHM_ICONS.values} />
-              <AlgorithmText>Values</AlgorithmText>
-            </AlgorithmButton>
+            {algorithmButtonsConfig.map((button, index) => (
+              <AlgorithmButton key={index} onPress={() => router.push(button.route)}>
+                <DashboardAlgorithmButton icon={button.icon} text={button.text} />
+              </AlgorithmButton>
+            ))}
           </AlgorithmSection>
         </Section>
       </ContentContainer>
@@ -138,6 +161,7 @@ export default function DashboardScreen() {
   );
 }
 
+// --- Styled Components (remain unchanged) ---
 
 const MainContainer = styled.View`
   flex: 1;
@@ -164,7 +188,7 @@ const GreetingText = styled.Text`
 
 const CompletionText = styled.Text`
   font-size: 14px;
-  color: ${(props) => props.theme.colors.textSecondary};
+  color: #9eabb8;
   font-family: ${(props) => props.theme.fonts.regular};
 `;
 
@@ -211,7 +235,7 @@ const DateDetails = styled.View`
 `;
 
 const StatusContainer = styled.View`
-  background-color: ${(props) => props.theme.colors.accept};
+  background-color: #008043;
   padding: 5px;
   border-radius: 6px;
   margin-bottom: 2%;
@@ -219,7 +243,7 @@ const StatusContainer = styled.View`
 `;
 
 const Status = styled.Text`
-  color: ${(props) => props.theme.colors.primary};
+  color: white;
   font-size: 14px;
   text-align: center;
 `;
@@ -284,7 +308,7 @@ const AlgorithmButton = styled.TouchableOpacity`
   align-items: center;
   width: 32%;
   height: 40%;
-  background-color: ${(props) => props.theme.colors.cardBackground};
+  background-color: #1c1c1e;
   border-radius: 12px;
   margin-bottom: 3%;
   padding: 7px;
@@ -303,7 +327,7 @@ const AlgorithmIcon = styled.Image`
 
 const AlgorithmText = styled.Text`
   font-size: 12px;
-  color: ${(props) => props.theme.colors.primary};
+  color: #fff;
   text-align: left;
   font-family: ${(props) => props.theme.fonts.regular};
 `;

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components/native";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { Picker } from "@react-native-picker/picker";
-import { theme } from "../theme";
 import WhiteButton from "../components/WhiteButton";
 import { PersonalData } from "../types";
 
@@ -67,7 +66,7 @@ export default function PersonalDataStep2() {
         placeholder="Your height"
         value={personalData.height}
         onChangeText={(height) => setPersonalData({ ...personalData, height })}
-        placeholderTextColor={theme.colors.placeholder}
+        placeholderTextColor="#888"
       />
 
       <WhiteButton onPress={handleNext} title="Next" />
@@ -126,5 +125,5 @@ const PickerWrapper = styled.View`
 `;
 
 const pickerStyles = {
-    color: theme.colors.placeholder, 
+    color: "#888", 
   };

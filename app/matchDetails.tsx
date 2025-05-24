@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import styled from "styled-components/native";
 import { ScrollView, Alert, TouchableOpacity, Image } from "react-native";
 import { useRouter } from "expo-router";
-import { rejectMatch } from "../api/api";
 
 export default function MatchDetailsScreen() {
   const router = useRouter();
@@ -21,7 +20,6 @@ export default function MatchDetailsScreen() {
 
   const handleIgnore = async () => {
     try {
-      await rejectMatch(match.id);
       Alert.alert("Ignored", "You have ignored this match.");
       router.push("/dashboard");
     } catch (error) {
@@ -94,7 +92,7 @@ const Container = styled.View`
   flex: 1;
   justify-content: flex-start;
   align-items: center;
-  background-color: ${(props) => props.theme.colors.background};
+  background-color: #121212;
   padding: 10px;
   padding-top: 15%;
 `;
@@ -107,7 +105,7 @@ const BackButton = styled.TouchableOpacity`
 
 const BackArrow = styled.Text`
   font-size: 24px;
-  color: ${(props) => props.theme.colors.primary};
+  color: white;
 `;
 
 const ProfilePictureContainer = styled.View`
@@ -126,13 +124,13 @@ const ProfileImage = styled.Image`
 
 const UserName = styled.Text`
   font-size: 24px;
-  color: ${(props) => props.theme.colors.primary};
+  color: white;
   font-weight: bold;
   margin-bottom: 20px;
 `;
 
 const BioText = styled.Text`
-  color: ${(props) => props.theme.colors.primary};
+  color: white;
   font-size: 16px;
   text-align: center;
   margin-bottom: 20px;
@@ -152,7 +150,7 @@ const InfoItem = styled.TouchableOpacity`
   align-items: center;
   justify-content: center;
   width: 23%; 
-  background-color: ${(props) => props.theme.colors.cardBackground};
+  background-color: #1c1c1e;
   border-radius: 10px;
   padding: 10px; 
   shadow-color: #000;
@@ -169,7 +167,7 @@ const InfoIcon = styled.Image`
 
 const InfoText = styled.Text`
   font-size: 14px;
-  color: ${(props) => props.theme.colors.primary};
+  color: #fff;
   text-align: center;
 `;
 
@@ -181,7 +179,7 @@ const ActionButtonsContainer = styled.View`
 `;
 
 const RejectButton = styled.TouchableOpacity`
-  background-color: ${(props) => props.theme.colors.reject};
+  background-color: #800002;
   padding: 15px;
   width: 48%;
   border-radius: 8px;
@@ -189,7 +187,7 @@ const RejectButton = styled.TouchableOpacity`
 `;
 
 const AcceptButton = styled.TouchableOpacity`
-  background-color: ${(props) => props.theme.colors.accept};
+  background-color: #008043;
   padding: 15px;
   width: 48%;
   border-radius: 8px;
@@ -197,13 +195,13 @@ const AcceptButton = styled.TouchableOpacity`
 `;
 
 const RejectText = styled.Text`
-  color: ${(props) => props.theme.colors.primary};
+  color: white;
   font-size: 16px;
   font-weight: bold;
 `;
 
 const AcceptText = styled.Text`
-  color: ${(props) => props.theme.colors.primary};
+  color: white;
   font-size: 16px;
   font-weight: bold;
 `;

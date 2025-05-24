@@ -4,7 +4,7 @@ import styled from "styled-components/native";
 import { ScrollView, Alert } from "react-native";
 import { useRouter } from "expo-router";
 import { Category, SelectedSubcategories } from "../types";
-import { updateInterests } from "../api/api";
+import { updateInterests } from "../api/mockApi";
 import Chip from "../components/Chip";
 import NextButton from "../components/NextButton";
 import CategoryTitle from "../components/CategoryTitle";

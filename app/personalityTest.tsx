@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import styled from "styled-components/native";
 import { Alert } from "react-native";
 import { useRouter } from "expo-router";
-import { theme } from "../theme";
 import { Slider } from "react-native-awesome-slider";
 import { useSharedValue } from "react-native-reanimated";
 
@@ -86,8 +85,8 @@ export default function PersonalityTestScreen() {
         maximumValue={max}
         onValueChange={handleResponseChange}
         theme={{
-          maximumTrackTintColor: theme.colors.sliderMaxTrack,
-          minimumTrackTintColor: theme.colors.sliderMinTrack,
+          maximumTrackTintColor: "#ccc",
+          minimumTrackTintColor: "#007AFF",
         }}
       />
 
@@ -156,7 +155,7 @@ const NextButton = styled.TouchableOpacity`
 `;
 
 const ButtonText = styled.Text`
-  color: ${(props) => props.theme.colors.background};
+  color: black;
   font-size: 16px;
   font-weight: bold;
 `;

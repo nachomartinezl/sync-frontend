@@ -105,7 +105,7 @@ const Container = styled.View`
   flex: 1;
   justify-content: flex-start;
   align-items: center;
-  background-color: ${(props) => props.theme.colors.background};
+  background-color: #121212;
   padding: 10px;
   padding-top: 15%;
 `;
@@ -118,18 +118,18 @@ const BackButton = styled.TouchableOpacity`
 
 const BackArrow = styled.Text`
   font-size: 24px;
-  color: ${(props) => props.theme.colors.primary};
+  color: white;
 `;
 
 const UserName = styled.Text`
   font-size: 24px;
-  color: ${(props) => props.theme.colors.primary};
+  color: white;
   font-weight: bold;
   margin-bottom: 20px;
 `;
 
 const DateDetailsCard = styled.View`
-  background-color: ${(props) => props.theme.colors.cardBackground};
+  background-color: #1c1c1e;
   border-radius: 12px;
   align-items: center;
   margin-bottom: 20px;
@@ -149,27 +149,27 @@ const DateInfo = styled.View`
 `;
 
 const Place = styled.Text`
-  color: ${(props) => props.theme.colors.primary};
+  color: white;
   font-size: 18px;
   font-weight: bold;
   margin-bottom: 5px;
 `;
 
 const DateTime = styled.Text`
-  color: ${(props) => props.theme.colors.primary};
+  color: white;
   font-size: 16px;
   margin-bottom: 10px;
 `;
 
 const StatusContainer = styled.View`
-  background-color: ${(props) => props.theme.colors.accept};
+  background-color: #008043;
   padding: 5px 10px;
   border-radius: 6px;
   margin-bottom: 10%;
 `;
 
 const Status = styled.Text`
-  color: ${(props) => props.theme.colors.primary};
+  color: white;
   font-size: 14px;
 `;
 
@@ -186,7 +186,7 @@ const InfoItem = styled.View`
   align-items: center;
   justify-content: center;
   width: 23%; 
-  background-color: ${(props) => props.theme.colors.cardBackground};
+  background-color: #1c1c1e;
   border-radius: 10px;
   padding: 10px; 
   shadow-color: #000;
@@ -203,7 +203,7 @@ const InfoIcon = styled.Image`
 
 const InfoText = styled.Text`
   font-size: 14px;
-  color: ${(props) => props.theme.colors.primary};
+  color: #fff;
   text-align: center;
 `;
 
@@ -215,7 +215,7 @@ const TagsContainer = styled.View`
 `;
 
 const Tag = styled.View`
-  background-color: ${(props) => props.theme.colors.cardBackground};
+  background-color: #1c1c1e;
   padding: 5px 15px;
   border-radius: 8px;
   margin: 5px;
@@ -227,7 +227,7 @@ const Tag = styled.View`
 `;
 
 const TagText = styled.Text`
-  color: ${(props) => props.theme.colors.primary};
+  color: white;
   font-size: 14px;
 `;
 

@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import styled from "styled-components/native";
 import { useRouter, useLocalSearchParams } from "expo-router";
-import { theme } from "../theme";
 import axios from "axios";
 import WhiteButton from "../components/WhiteButton";
-import { updateProfile, uploadProfilePicture } from "../api/api"; // Import your API call
+import { updateProfile, uploadProfilePicture } from "../api/mockApi"; // Import your API call
 import { PersonalData, APIErrorResponse, ValidationError } from "../types";
 import { launchImageLibrary } from "react-native-image-picker";
 
@@ -79,7 +78,7 @@ export default function PersonalDataStep3() {
         placeholder="Tell others about you..."
         value={personalData.bio}
         onChangeText={(bio) => setPersonalData({ ...personalData, bio })}
-        placeholderTextColor={theme.colors.placeholder}
+        placeholderTextColor="#888"
         multiline
         numberOfLines={4}
       />
