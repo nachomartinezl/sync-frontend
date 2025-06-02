@@ -1,19 +1,49 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components/native";
-import { ScrollView, View, TouchableOpacity, Image } from "react-native";
+import { ScrollView, View, TouchableOpacity, Image, Text, ActivityIndicator } from "react-native"; // Added Text, ActivityIndicator
 import { useRouter } from "expo-router";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchUserProfile, selectUserProfile } from "../store/slices/userProfileSlice";
+import { RootState, AppDispatch } from "../store"; // Import RootState and AppDispatch for typing
 
 export default function ProfileSummaryScreen() {
   const router = useRouter();
-  const [profileData] = useState({
-    name: "Devan",
-    bio: "Born in Sydney, currently traveling the world in pursuit of new experiences and adventures. Passionate about fitness and living an active lifestyle, constantly exploring new ways to challenge both mind and body.",
-    preference: "Women",
-    mainPicture:
-      "https://cdn.usegalileo.ai/stability/7fa5b77f-a521-4605-b8fe-86ed75b44f5a.png",
-  });
+  const dispatch = useDispatch<AppDispatch>(); // Typed dispatch
+  const { 
+    name, 
+    bio, 
+    preference, 
+    mainPicture, 
+    loading, 
+    error 
+  } = useSelector((state: RootState) => selectUserProfile(state)); // Typed state
 
-  const { name, bio, mainPicture, preference } = profileData;
+  useEffect(() => {
+    dispatch(fetchUserProfile());
+  }, [dispatch]);
+
+  if (loading === 'pending') {
+    return (
+      <Container>
+        <ActivityIndicator size="large" color="#fff" />
+      </Container>
+    );
+  }
+
+  if (error) {
+    return (
+      <Container>
+        <ErrorMessage>Error: {error}</ErrorMessage>
+        <TouchableOpacity onPress={() => dispatch(fetchUserProfile())}>
+          <RetryText>Try Again</RetryText>
+        </TouchableOpacity>
+      </Container>
+    );
+  }
+  
+  // Fallback for mainPicture if it's null or undefined, to prevent crashes
+  const displayPicture = mainPicture || 'https://via.placeholder.com/150';
+
 
   return (
     <Container>
@@ -21,11 +51,11 @@ export default function ProfileSummaryScreen() {
         <BackArrow>←</BackArrow>
       </BackButton>
       {/* User Name on Top */}
-      <UserName>{name}</UserName>
+      <UserName>{name || 'N/A'}</UserName>
 
       {/* Profile Picture with Update Text */}
       <ProfilePictureContainer>
-        <ProfileImage source={{ uri: mainPicture }} />
+        <ProfileImage source={{ uri: displayPicture }} />
         <TouchableOpacity>
           <UpdateText>Update Photo</UpdateText>
         </TouchableOpacity>
@@ -33,7 +63,7 @@ export default function ProfileSummaryScreen() {
 
       {/* Bio */}
       <BioCard>
-        <BioText>{bio}</BioText>
+        <BioText>{bio || 'No bio available.'}</BioText>
       </BioCard>
 
       {/* Preference Section */}
@@ -41,7 +71,7 @@ export default function ProfileSummaryScreen() {
         <SectionTitle>Your preference</SectionTitle>
         <TouchableOpacity>
         <PreferenceContainer>
-          <PreferenceText>{preference}</PreferenceText>
+          <PreferenceText>{preference || 'Not set'}</PreferenceText>
           <PreferenceIcon source={require("../assets/icons/women.png")} />
         </PreferenceContainer>
         </TouchableOpacity>
@@ -75,13 +105,24 @@ export default function ProfileSummaryScreen() {
 
 // Styled components
 
+const ErrorMessage = styled.Text`
+  color: red;
+  font-size: 18px;
+  margin-bottom: 10px;
+`;
+
+const RetryText = styled.Text`
+  color: ${(props) => props.theme.colors.primary};
+  font-size: 16px;
+`;
+
 const Container = styled.View`
   flex: 1;
-  justify-content: flex-start;
+  justify-content: center; /* Adjusted for loading/error states */
   align-items: center;
   background-color: #121212;
   padding: 10px;
-  padding-top: 15%;
+  padding-top: 15%; /* This might need adjustment if justify-content is center */
 `;
 
 const BackButton = styled.TouchableOpacity`

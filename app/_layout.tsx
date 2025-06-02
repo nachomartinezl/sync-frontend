@@ -1,4 +1,6 @@
 import React from 'react';
+import { Provider } from 'react-redux';
+import { store } from '../store';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { ThemeProvider } from 'styled-components';
 import { Stack } from 'expo-router';
@@ -30,18 +32,20 @@ const screens = [
 
 export default function App() {
   return (
-    <GestureHandlerRootView style={styles.container}>
-      <ThemeProvider theme={theme}>
-        <Stack>
-          {screens.map((screen) => (
-            <Stack.Screen 
-              key={screen.name} 
-              name={screen.name} 
-              options={{ title: screen.title, headerShown: false }} 
-            />
-          ))}
-        </Stack>
-      </ThemeProvider>
-    </GestureHandlerRootView>
+    <Provider store={store}>
+      <GestureHandlerRootView style={styles.container}>
+        <ThemeProvider theme={theme}>
+          <Stack>
+            {screens.map((screen) => (
+              <Stack.Screen 
+                key={screen.name} 
+                name={screen.name} 
+                options={{ title: screen.title, headerShown: false }} 
+              />
+            ))}
+          </Stack>
+        </ThemeProvider>
+      </GestureHandlerRootView>
+    </Provider>
   );
 }

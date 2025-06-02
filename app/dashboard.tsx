@@ -1,7 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components/native";
 import { useRouter } from "expo-router";
-import { TouchableOpacity } from 'react-native';
+import { TouchableOpacity, ActivityIndicator, Text, View, Image } from 'react-native'; // Added View, Image
+import { useDispatch, useSelector } from "react-redux";
+import { 
+  fetchAppointments, 
+  selectAppointments, 
+  selectAppointmentsLoading, 
+  selectAppointmentsError 
+} from "../store/slices/appointmentsSlice";
+import { RootState, AppDispatch } from "../store";
+import DateDisplayCard from "../../components/DateDisplayCard";
+import AlgorithmNavigationButton from "../../components/AlgorithmNavigationButton";
+import DashboardHeader from "../../components/DashboardHeader"; // Import DashboardHeader
+import MatchPreviewCard from "../../components/MatchPreviewCard"; // Import MatchPreviewCard
 
 interface SectionProps {
   flex?: number;
@@ -10,17 +22,7 @@ interface SectionProps {
 // Constants for data and file paths
 const PROFILE_IMAGE_URL = "https://cdn.usegalileo.ai/stability/7fa5b77f-a521-4605-b8fe-86ed75b44f5a.png";
 
-// Appointment data (replace with API call in the future)
-const APPOINTMENT = {
-  name: "Gina",
-  place: "Rooftop Bar",
-  datetime: "Next Friday, 22hs",
-  status: "Confirmed",
-  picture:
-    "https://cdn.usegalileo.ai/stability/592d5f3f-d636-48a4-9277-8cce7690ba8c.png",
-};
-
-// Matches data (replace with API call in the future)
+// Matches data (replace with API call in the future) - APPOINTMENT constant removed
 const MATCHES = [
   {
     name: "Lauren",
@@ -54,51 +56,63 @@ const ALGORITHM_ICONS = {
 
 export default function DashboardScreen() {
   const router = useRouter();
-  const [name, setName] = useState("Devan");
+  const dispatch = useDispatch<AppDispatch>();
+  const appointments = useSelector((state: RootState) => selectAppointments(state));
+  const appointmentsLoading = useSelector((state: RootState) => selectAppointmentsLoading(state));
+  const appointmentsError = useSelector((state: RootState) => selectAppointmentsError(state));
+
+  // Assuming user's name and profile completeness are fetched from userProfileSlice
+  // For now, let's keep the local state for these, or you could integrate them similarly
+  const [userName, setUserName] = useState("Devan"); // Renamed to avoid conflict
   const [completeness, setCompleteness] = useState(1);
+
+  useEffect(() => {
+    dispatch(fetchAppointments());
+  }, [dispatch]);
+
+  const currentAppointment = appointments && appointments.length > 0 ? appointments[0] : null;
+  const appointmentPicture = currentAppointment?.partnerImage || 'https://via.placeholder.com/150';
 
   return (
     <MainContainer>
-      <TopBar>
-        <ProfileSection>
-          <GreetingText>Hello, {name}</GreetingText>
-          <CompletionText>
-            Your profile is {completeness * 100}% complete
-          </CompletionText>
-        </ProfileSection>
-        {/* Wrap ProfileImage with TouchableOpacity to handle onPress */}
-        <TouchableOpacity onPress={() => router.push("/profile")}>
-          <ProfileImage source={{ uri: PROFILE_IMAGE_URL }} />
-        </TouchableOpacity>
-      </TopBar>
+      <DashboardHeader 
+        userName={userName}
+        profileCompleteness={completeness}
+        profileImageUrl={PROFILE_IMAGE_URL}
+        onProfilePress={() => router.push("/profile")}
+      />
 
       <ContentContainer>
         <Section flex={0.8}>
           <SectionTitle>Your date</SectionTitle>
-          <DateCard onPress={() => router.push("/dateDetails")}>
-            <DateImage source={{ uri: APPOINTMENT.picture }} />
-            <DateDetails>
-              <NameText>{APPOINTMENT.name}</NameText>
-              <PlaceText>{APPOINTMENT.place}</PlaceText>
-              <DateText>{APPOINTMENT.datetime}</DateText>
-              <StatusContainer>
-              <Status>{APPOINTMENT.status}</Status>
-              </StatusContainer>
-            </DateDetails>
-          </DateCard>
+          {appointmentsLoading === 'pending' && <ActivityIndicator size="large" color="#fff" />}
+          {appointmentsError && <ErrorMessage>Error: {appointmentsError}</ErrorMessage>}
+          {appointmentsLoading !== 'pending' && !appointmentsError && currentAppointment && (
+            <DateDisplayCard
+              pictureUrl={appointmentPicture}
+              partnerName={currentAppointment.partnerName || 'N/A'}
+              place={currentAppointment.description || 'Details unavailable'}
+              datetime={`${currentAppointment.date} at ${currentAppointment.time || 'Time TBD'}`}
+              status={currentAppointment.status || 'Unknown'}
+              onPress={() => router.push("/dateDetails")}
+            />
+          )}
+          {appointmentsLoading !== 'pending' && !appointmentsError && !currentAppointment && (
+            <NoDateText>No current date scheduled.</NoDateText>
+          )}
         </Section>
 
         <Section flex={1}>
           <SectionTitle>Matches</SectionTitle>
           <MatchesGrid>
-            {/* Navigate to /matches when the first match is clicked */}
             {MATCHES.map((m, idx) => (
-              <MatchCard key={idx} onPress={() => idx === 0 && router.push("/matchDetails")}>
-                <MatchImage source={{ uri: m.picture }} />
-                <MatchName>
-                  {m.name}, {m.age}
-                </MatchName>
-              </MatchCard>
+              <MatchPreviewCard
+                key={idx}
+                name={m.name}
+                age={m.age}
+                pictureUrl={m.picture}
+                onPress={() => idx === 0 && router.push("/matchDetails")} 
+              />
             ))}
           </MatchesGrid>
         </Section>
@@ -106,31 +120,36 @@ export default function DashboardScreen() {
         <Section flex={0.8}>
           <SectionTitle>Train your algorithm</SectionTitle>
           <AlgorithmSection>
-            {/* Each button navigates to the respective route */}
-            <AlgorithmButton onPress={() => router.push("/personalityTest")}>
-              <AlgorithmIcon source={ALGORITHM_ICONS.personality} />
-              <AlgorithmText>Personality</AlgorithmText>
-            </AlgorithmButton>
-            <AlgorithmButton onPress={() => router.push("/personalityTest")}>
-              <AlgorithmIcon source={ALGORITHM_ICONS.character} />
-              <AlgorithmText>Character</AlgorithmText>
-            </AlgorithmButton>
-            <AlgorithmButton onPress={() => router.push("/personalityTest")}>
-              <AlgorithmIcon source={ALGORITHM_ICONS.emotional} />
-              <AlgorithmText>Emotional</AlgorithmText>
-            </AlgorithmButton>
-            <AlgorithmButton onPress={() => router.push("/astrologicalProfile")}>
-              <AlgorithmIcon source={ALGORITHM_ICONS.astrological} />
-              <AlgorithmText>Astrology</AlgorithmText>
-            </AlgorithmButton>
-            <AlgorithmButton onPress={() => router.push("/interests")}>
-              <AlgorithmIcon source={ALGORITHM_ICONS.interests} />
-              <AlgorithmText>Interests</AlgorithmText>
-            </AlgorithmButton>
-            <AlgorithmButton onPress={() => router.push("/interests")}>
-              <AlgorithmIcon source={ALGORITHM_ICONS.values} />
-              <AlgorithmText>Values</AlgorithmText>
-            </AlgorithmButton>
+            <AlgorithmNavigationButton
+              iconSource={ALGORITHM_ICONS.personality}
+              label="Personality"
+              onPress={() => router.push("/personalityTest")}
+            />
+            <AlgorithmNavigationButton
+              iconSource={ALGORITHM_ICONS.character}
+              label="Character"
+              onPress={() => router.push("/personalityTest")}
+            />
+            <AlgorithmNavigationButton
+              iconSource={ALGORITHM_ICONS.emotional}
+              label="Emotional"
+              onPress={() => router.push("/personalityTest")}
+            />
+            <AlgorithmNavigationButton
+              iconSource={ALGORITHM_ICONS.astrological}
+              label="Astrology"
+              onPress={() => router.push("/astrologicalProfile")}
+            />
+            <AlgorithmNavigationButton
+              iconSource={ALGORITHM_ICONS.interests}
+              label="Interests"
+              onPress={() => router.push("/interests")}
+            />
+            <AlgorithmNavigationButton
+              iconSource={ALGORITHM_ICONS.values}
+              label="Values"
+              onPress={() => router.push("/interests")}
+            />
           </AlgorithmSection>
         </Section>
       </ContentContainer>
@@ -138,140 +157,58 @@ export default function DashboardScreen() {
   );
 }
 
-
-const MainContainer = styled.View`
+const MainContainer = styled(View)` /* Changed to styled(View) */
   flex: 1;
-  background-color: ${(props) => props.theme.colors.background};
+  background-color: ${(props) => props.theme.colors.background || '#121212'}; /* Fallback */
 `;
 
-const TopBar = styled.View`
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px;
-  margin-top: 5%;
+const ErrorMessage = styled(Text)` /* Changed to styled(Text) */
+  color: red;
+  font-size: 16px;
+  text-align: center;
+  margin-top: 10px;
 `;
 
-const ProfileSection = styled.View`
-  flex-direction: column;
+const NoDateText = styled(Text)` /* Changed to styled(Text) */
+  color: #9eabb8; /* Or theme.colors.textSecondary */
+  font-size: 16px;
+  text-align: center;
+  margin-top: 20px;
 `;
 
-const GreetingText = styled.Text`
-  font-size: ${(props) => props.theme.fontSizes.large};
-  color: ${(props) => props.theme.colors.primary};
-  font-family: ${(props) => props.theme.fonts.bold};
-`;
+// TopBar, ProfileSection, GreetingText, CompletionText, ProfileImage are removed
+// as they are now in DashboardHeader.tsx
 
-const CompletionText = styled.Text`
-  font-size: 14px;
-  color: #9eabb8;
-  font-family: ${(props) => props.theme.fonts.regular};
-`;
-
-const ProfileImage = styled.Image`
-  width: 50px;
-  height: 50px;
-  border-radius: 25px;
-`;
-
-const ContentContainer = styled.View`
+const ContentContainer = styled(View)` 
   flex: 1;
   padding: 20px;
 `;
 
-const Section = styled.View<SectionProps>`
+const Section = styled(View)<SectionProps>` /* Changed to styled(View) */
   flex: ${(props) => props.flex || 1};
   margin-bottom: 5%;
 `;
 
-const SectionTitle = styled.Text`
+const SectionTitle = styled(Text)` /* Changed to styled(Text) */
   font-size: 18px;
-  color: ${(props) => props.theme.colors.primary};
-  font-family: ${(props) => props.theme.fonts.bold};
+  color: ${(props) => props.theme.colors.primary || '#FFFFFF'}; /* Fallback */
+  font-family: ${(props) => props.theme.fonts.bold || 'System'}; /* Fallback */
   margin-bottom: 3%;
 `;
 
-const DateImage = styled.Image`
-  width: 40%;
-  height: 100%;
-  border-radius: 10px;
-  margin-right: 10px;
-`;
+// DateImage, DateCard, DateDetails, StatusContainer, Status, NameText, PlaceText, DateText are removed
+// as they are now in DateDisplayCard.tsx
 
-const DateCard = styled.TouchableOpacity`
-  flex-direction: row;
-  background-color: ${(props) => props.theme.colors.secondary};
-  border-radius: 10px;
-  flex: 1;
-`;
-
-const DateDetails = styled.View`
-  flex-direction: column;
-  justify-content: center;
-`;
-
-const StatusContainer = styled.View`
-  background-color: #008043;
-  padding: 5px;
-  border-radius: 6px;
-  margin-bottom: 2%;
-  width: 75%;
-`;
-
-const Status = styled.Text`
-  color: white;
-  font-size: 14px;
-  text-align: center;
-`;
-
-const NameText = styled.Text`
-  font-size: 16px;
-  color: ${(props) => props.theme.colors.primary};
-  font-family: ${(props) => props.theme.fonts.regular};
-  margin-bottom: 5px;
-`;
-
-const PlaceText = styled.Text`
-  font-size: 16px;
-  margin-bottom: 5px;
-  color: ${(props) => props.theme.colors.primary};
-  font-family: ${(props) => props.theme.fonts.regular};
-`;
-
-const DateText = styled.Text`
-  font-size: 16px;
-  margin-bottom: 5px;
-  color: ${(props) => props.theme.colors.primary};
-  font-family: ${(props) => props.theme.fonts.regular};
-`;
-
-
-const MatchesGrid = styled.View`
+const MatchesGrid = styled(View)`
   flex-direction: row;
   justify-content: space-between;
   flex: 1;
 `;
 
-const MatchCard = styled.TouchableOpacity`
-  align-items: flex-start;
-  width: 32%;
-  margin-bottom: 10px;
-`;
+// MatchCard, MatchImage, MatchName are removed
+// as they are now in MatchPreviewCard.tsx
 
-const MatchImage = styled.Image`
-  width: 100%;
-  height: 90%;
-  border-radius: 10px;
-  margin-bottom: 10px;
-`;
-
-const MatchName = styled.Text`
-  font-size: 14px;
-  color: ${(props) => props.theme.colors.primary};
-  font-family: ${(props) => props.theme.fonts.bold};
-`;
-
-const AlgorithmSection = styled.View`
+const AlgorithmSection = styled(View)`
   flex: 1;
   flex-wrap: wrap;
   flex-direction: row;
@@ -279,31 +216,5 @@ const AlgorithmSection = styled.View`
   margin-top: 10px;
 `;
 
-const AlgorithmButton = styled.TouchableOpacity`
-  flex-direction: row;
-  align-items: center;
-  width: 32%;
-  height: 40%;
-  background-color: #1c1c1e;
-  border-radius: 12px;
-  margin-bottom: 3%;
-  padding: 7px;
-  shadow-color: #000;
-  shadow-offset: 0px 2px;
-  shadow-opacity: 0.8;
-  shadow-radius: 2px;
-  elevation: 4;
-`;
-
-const AlgorithmIcon = styled.Image`
- width: 31px;
- height: 32px;
- margin-right: 7px;
-`;
-
-const AlgorithmText = styled.Text`
-  font-size: 12px;
-  color: #fff;
-  text-align: left;
-  font-family: ${(props) => props.theme.fonts.regular};
-`;
+// AlgorithmButton, AlgorithmIcon, AlgorithmText are removed
+// as they are now in AlgorithmNavigationButton.tsx
